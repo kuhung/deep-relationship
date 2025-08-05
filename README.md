@@ -1,2 +1,78 @@
-# deep-relationship
-Seek and visualization the relationship in Novel
+# 凡人修仙传人物关系知识图谱
+
+本项目旨在将百万字级小说《凡人修仙传》转化为一个可交互、可视化的知识图谱，探索大语言模型（LLM）在复杂叙事文本中的知识抽取能力，并构建一个现代化的图应用。
+
+该项目是 [从文本到繁星：面向复杂叙事的知识图谱技术、可视化与实施全景指南](doc/plan.md) 的具体实践。
+
+## 核心方案
+
+我们将遵循一个模块化的四阶段架构：**数据获取 -> 知识抽取 -> 数据持久化 -> 可视化实现**。
+
+- **知识抽取**: 使用 Python 和 `kg-gen` 库，借助 `gpt-4o` 等先进的大语言模型，从小说文本中自动化抽取人物、关系、事件等信息，构建知识图谱。
+- **数据持久化**: 采用业界主流的图数据库 **Neo4j** 来存储和管理图谱数据，以保证高效的关联查询和分析能力。
+- **可视化与应用**:
+  - **首选方案 (低代码)**: 采用 **AntV G6VP** 平台，通过其低代码能力快速搭建一个功能丰富的图分析应用，实现“拿来改动上线”的目标。
+  - **备选方案 (完全定制)**: 基于 **React** 和 **AntV Graphin** 库进行定制化前端开发，以获得最大的设计自由度。
+
+## 项目路线图
+
+我们将项目分为四个主要阶段，逐步推进：
+
+| 阶段 | 核心任务 | 预期产出 |
+| :--- | :--- | :--- |
+| **第一阶段：<br>基础构建与数据准备** | 1. 初始化项目环境（Python, Docker, Node.js）。<br>2. 获取《凡人修仙传》小说文本。<br>3. 定义知识图谱的初始模式（Schema）。<br>4. 部署一个本地 Neo4j 数据库实例。 | - 标准化的项目结构。<br>- `fanren_kg.json` 样例数据。<br>- 可运行的 Neo4j 服务。 |
+| **第二阶段：<br>知识抽取与持久化** | 1. 编写并优化 LLM 抽取提示（Prompt）。<br>2. 使用 `kg-gen` 对全书进行分块抽取。<br>3. 清洗与聚合抽取结果。<br>4. 将结构化数据导入 Neo4j。 | - 完整的知识抽取与导入脚本。<br>- 一个包含数万节点和关系的图数据库。 |
+| **第三阶段：<br>可视化应用实现** | 1. **(低代码路径)**：部署 G6VP 并连接 Neo4j。<br>2. 在 G6VP 中配置画布、布局、样式和交互组件。<br>3. 导出 G6VP 应用为独立前端项目并部署。<br>4. **(定制化路径)**：搭建 React 前端项目，使用 Graphin 开发可视化界面。 | - 一个可在线访问和交互的人物关系图谱应用。 |
+| **第四阶段：<br>迭代与扩展** | 1. 扩展图谱模式，加入更多实体类型（如宗门、法宝）。<br>2. 引入时间或章节属性，展现人物关系的动态演变。<br>3. 优化查询性能和可视化效果。 | - 功能更丰富、数据更多维的应用 V2 版本。 |
+
+## 开发框架与技术栈
+
+### 目录结构
+
+```
+.
+├── data/
+│   └── fanren_xiuxian_zhuan.txt  # 小说原始文本
+├── doc/
+│   └── plan.md                   # 项目顶层规划文档
+├── scripts/
+│   ├── extract_kg.py             # 知识抽取脚本
+│   └── import_to_neo4j.py        # 数据导入脚本
+├── app/
+│   └── (由 G6VP 导出或自定义的 React 应用)
+├── README.md
+└── requirements.txt              # Python 依赖
+```
+
+### 环境搭建
+
+1.  **Python 环境**
+
+    推荐使用 `virtualenv` 或 `conda` 创建独立的 Python 环境。
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Neo4j 数据库**
+
+    使用 Docker 可以最快地启动一个 Neo4j 服务。
+
+    ```bash
+    docker run --name fanren-neo4j \
+        -p 7474:7474 -p 7687:7687 \
+        -d \
+        -e NEO4J_AUTH=neo4j/your_password \
+        neo4j:latest
+    ```
+    启动后，可以通过 `http://localhost:7474` 访问 Neo4j Browser。
+
+3.  **前端环境**
+
+    确保已安装 [Node.js](https://nodejs.org/) (LTS 版本)。如果采用定制化开发，可以使用 Vite 快速初始化 React 项目。
+
+    ```bash
+    npm create vite@latest app -- --template react
+    cd app
+    npm install @antv/g6 @antv/graphin
+    ```

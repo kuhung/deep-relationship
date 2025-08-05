@@ -1,0 +1,8 @@
+# 核心依赖
+kg-gen
+neo4j
+
+# kg-gen 可能会依赖以下库，显式添加以保证环境一致性
+# litellm
+# langchain
+# openai 
