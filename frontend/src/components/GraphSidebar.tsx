@@ -12,15 +12,18 @@ interface GraphSidebarProps {
   stats: GraphStats
   data: GraphData
   onNodeSelect: (node: NodeData) => void
+  onNodeTypeSelect: (nodeTypes: string[]) => void
 }
 
 const GraphSidebar: React.FC<GraphSidebarProps> = ({
   selectedNode,
   stats,
   data,
-  onNodeSelect
+  onNodeSelect,
+  onNodeTypeSelect
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('')
+  const [selectedNodeTypes, setSelectedNodeTypes] = useState<string[]>([])
 
   // 搜索结果
   const searchResults = useMemo(() => {
@@ -189,10 +192,24 @@ const GraphSidebar: React.FC<GraphSidebarProps> = ({
         <Card size="small" title="节点类型">
           <Space direction="vertical" size="small" style={{ width: '100%' }}>
             {nodeTypeStats.map(({ type, count, label, color }) => (
-              <div key={type} className="legend-item">
+              <div
+                key={type}
+                className="legend-item"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  const newSelectedNodeTypes = selectedNodeTypes.includes(type)
+                    ? selectedNodeTypes.filter(t => t !== type)
+                    : [...selectedNodeTypes, type]
+                  setSelectedNodeTypes(newSelectedNodeTypes)
+                  onNodeTypeSelect(newSelectedNodeTypes)
+                }}
+              >
                 <div
                   className="legend-color"
-                  style={{ backgroundColor: color }}
+                  style={{
+                    backgroundColor: selectedNodeTypes.includes(type) ? '#D3D3D3' : color,
+                    border: selectedNodeTypes.includes(type) ? '2px solid #1890ff' : 'none'
+                  }}
                 />
                 <Text style={{ flex: 1, fontSize: '12px' }}>{label}</Text>
                 <Text type="secondary" style={{ fontSize: '11px' }}>({count})</Text>

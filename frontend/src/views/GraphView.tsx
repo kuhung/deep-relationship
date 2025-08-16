@@ -31,6 +31,7 @@ const GraphView = () => {
       enableAnimation: true,
     }
   })
+  const [hiddenNodeTypes, setHiddenNodeTypes] = useState<string[]>([])
 
   // 初始化数据
   useEffect(() => {
@@ -92,6 +93,24 @@ const GraphView = () => {
     message.success('数据已刷新')
   }
 
+  // 处理节点类型选择
+  const handleNodeTypeSelect = (nodeTypes: string[]) => {
+    setHiddenNodeTypes(nodeTypes)
+  }
+
+  // 根据隐藏节点类型过滤数据
+  const filteredGraphData = useMemo(() => {
+    const visibleNodes = state.data.nodes.filter(node => !hiddenNodeTypes.includes(node.nodeType))
+    const visibleNodeIds = new Set(visibleNodes.map(node => node.id))
+    const visibleEdges = state.data.edges.filter(edge =>
+      visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)
+    )
+    return {
+      nodes: visibleNodes,
+      edges: visibleEdges
+    }
+  }, [state.data, hiddenNodeTypes])
+
   // 计算统计数据
   const stats = useMemo(() => ({
     nodeCount: state.data.nodes.length,
@@ -115,7 +134,7 @@ const GraphView = () => {
       <Content style={{ position: 'relative', overflow: 'hidden' }}>
         {/* 图谱容器 */}
         <GraphContainer
-          data={state.data}
+          data={filteredGraphData}
           config={state.config}
           onNodeSelect={handleNodeSelect}
         />
@@ -134,6 +153,7 @@ const GraphView = () => {
           stats={stats}
           data={state.data}
           onNodeSelect={handleNodeSelect}
+          onNodeTypeSelect={handleNodeTypeSelect}
         />
       </Content>
     </Layout>
