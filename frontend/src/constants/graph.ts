@@ -11,66 +11,43 @@ export enum GraphLayoutType {
 // 图布局配置
 export const LAYOUT_CONFIGS = {
   [GraphLayoutType.FORCE]: {
-    type: 'd3Force',
-    linkDistance: 100,
-    nodeStrength: -300,
-    edgeStrength: 0.2,
-    nodeSize: 30,
+    type: 'force',
+    linkDistance: 120,
     preventOverlap: true,
-    alpha: 0.8,
-    alphaDecay: 0.028,
-    velocityDecay: 0.1
+    nodeSize: 30,
+    nodeSpacing: 20,
+    centrality: 'degree'
   },
   [GraphLayoutType.CIRCULAR]: {
     type: 'circular',
     radius: 200,
     startRadius: 100,
-    endRadius: 300,
-    clockwise: false,
-    divisions: 5,
-    ordering: null
+    endRadius: 300
   },
   [GraphLayoutType.RADIAL]: {
     type: 'radial',
-    center: [0, 0],
-    linkDistance: 100,
-    maxIteration: 1000,
-    focusNode: null,
+    linkDistance: 120,
     unitRadius: 80,
     preventOverlap: true,
-    nodeSize: 30,
-    strictRadial: false
+    nodeSize: 30
   },
   [GraphLayoutType.DAGRE]: {
     type: 'dagre',
     rankdir: 'TB',
-    align: null,
     nodesep: 20,
-    ranksep: 50,
-    controlPoints: true
+    ranksep: 50
   },
   [GraphLayoutType.GRID]: {
     type: 'grid',
-    begin: [0, 0],
     preventOverlap: true,
     nodeSize: 30,
-    condense: false,
-    rows: null,
-    cols: null,
     sortBy: 'degree'
   },
   [GraphLayoutType.CONCENTRIC]: {
     type: 'concentric',
-    center: [0, 0],
     nodeSize: 30,
     minNodeSpacing: 20,
-    preventOverlap: true,
-    sweep: null,
-    equidistant: false,
-    startAngle: Math.PI / 6,
-    clockwise: false,
-    maxLevelDiff: null,
-    sortBy: 'degree'
+    preventOverlap: true
   }
 }
 

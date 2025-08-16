@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Layout, Spin, message } from 'antd'
+import { Layout, Spin, App as AntdApp } from 'antd'
 import GraphContainer from '@/components/GraphContainer'
 import GraphToolbar from '@/components/GraphToolbar'
 import GraphSidebar from '@/components/GraphSidebar'
@@ -17,6 +17,8 @@ interface GraphViewState {
 }
 
 const GraphView = () => {
+  const { message } = AntdApp.useApp() // Use App.useApp() to get message instance
+
   const [state, setState] = useState<GraphViewState>({
     data: { nodes: [], edges: [] },
     loading: true,

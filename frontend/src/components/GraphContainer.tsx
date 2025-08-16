@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Graph } from '@antv/g6'
 import { GraphData, GraphConfig, NodeData } from '@/types/graph'
+import { LAYOUT_CONFIGS } from '@/constants/graph'
 
 interface GraphContainerProps {
   data: GraphData
@@ -10,86 +11,125 @@ interface GraphContainerProps {
 
 const GraphContainer: React.FC<GraphContainerProps> = ({
   data,
-  config: _config,
+  config,
   onNodeSelect
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const graphRef = useRef<Graph | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
 
-  // 初始化图谱
+  // 初始化图谱实例
   useEffect(() => {
-    if (!containerRef.current || !mounted) return
+    if (graphRef.current || !containerRef.current) return
 
-    try {
-      // 创建G6图实例 - 使用最基础的配置
-      const graph = new Graph({
-        container: containerRef.current,
-        width: containerRef.current.offsetWidth,
-        height: containerRef.current.offsetHeight,
-      })
+    const graph = new Graph({
+      container: containerRef.current,
+      width: containerRef.current.offsetWidth,
+      height: containerRef.current.offsetHeight,
+      behaviors: ['drag-canvas', 'zoom-canvas', 'drag-element'],
+    })
 
-      // 绑定事件
-      graph.on('node:click', (evt) => {
-        console.log('节点点击事件:', evt)
-        // 暂时简化事件处理
-        onNodeSelect(null)
-      })
+    // 绑定事件
+    graph.on('node:click', (evt: any) => {
+      const nodeId = evt.target?.id || evt.itemId
+      if (nodeId && data.nodes) {
+        const nodeData = data.nodes.find(n => n.id === nodeId)
+        if (nodeData) {
+          setSelectedNodeId(nodeId)
+          onNodeSelect(nodeData)
+        }
+      }
+    })
 
-      graph.on('canvas:click', () => {
-        onNodeSelect(null)
-      })
+    graph.on('canvas:click', () => {
+      setSelectedNodeId(null)
+      onNodeSelect(null)
+    })
+    
+    graphRef.current = graph
+    setMounted(true)
 
-      graphRef.current = graph
-    } catch (error) {
-      console.error('初始化G6图谱时出错:', error)
+    // 处理窗口大小变化
+    const handleResize = () => {
+      if (graphRef.current && containerRef.current) {
+        graphRef.current.setSize(containerRef.current.offsetWidth, containerRef.current.offsetHeight)
+        graphRef.current.fitView()
+      }
     }
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      if (graphRef.current) {
-        try {
-          graphRef.current.destroy()
-        } catch (error) {
-          console.error('销毁图谱时出错:', error)
-        }
-        graphRef.current = null
-      }
+      window.removeEventListener('resize', handleResize)
+      graphRef.current?.destroy()
+      graphRef.current = null
     }
-  }, [mounted, onNodeSelect])
+  }, [data.nodes, onNodeSelect])
 
-  // 处理数据更新
+  // 数据和配置更新
   useEffect(() => {
-    if (!graphRef.current || !data) return
+    if (!mounted || !graphRef.current) return
 
+    const g = graphRef.current
+
+    // 调整节点大小 - 减小30%
+    const nodeSize = Math.max(config.nodeSize * 0.7, 15)
+
+    const processedData = {
+      nodes: data.nodes.map(node => ({
+        id: node.id,
+        data: {
+          ...node,
+          displaySize: nodeSize
+        },
+        style: {
+          size: nodeSize,
+          fill: node.color || '#5B8FF9',
+          stroke: selectedNodeId === node.id ? '#1890ff' : '#fff',
+          lineWidth: selectedNodeId === node.id ? 3 : 2,
+          shadowColor: selectedNodeId === node.id ? '#1890ff' : 'transparent',
+          shadowBlur: selectedNodeId === node.id ? 8 : 0,
+        },
+        // 处理标签
+        ...(config.showNodeLabel && {
+          labelText: node.label,
+          labelFontSize: 11,
+          labelFill: '#333',
+          labelPosition: 'bottom'
+        })
+      })),
+      edges: data.edges.map(edge => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        data: edge,
+        style: {
+          stroke: edge.color || '#e2e2e2',
+          lineWidth: 1.5,
+          opacity: 0.8
+        },
+        ...(config.showEdgeLabel && edge.label && {
+          labelText: edge.label,
+          labelFontSize: 9,
+          labelFill: '#666'
+        })
+      }))
+    }
+    
     try {
-      // 简化的数据处理
-      const processedData = {
-        nodes: data.nodes.map(node => ({
-          id: node.id,
-          data: { 
-            ...node,
-            x: Math.random() * 800,
-            y: Math.random() * 600
-          }
-        })),
-        edges: data.edges.map(edge => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          data: edge
-        }))
-      }
-
-      // 暂时只打印数据，待G6 API研究清楚后再实现
-      console.log('G6数据准备就绪:', processedData)
+      // 使用any类型来绕过类型检查
+      (g as any).setData(processedData);
+      (g as any).setLayout(LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);
+      g.render().then(() => {
+        g.fitView()
+      }).catch(error => {
+        console.warn('图谱渲染警告:', error)
+      })
     } catch (error) {
-      console.error('渲染图谱数据时出错:', error)
+      console.error('设置图谱数据时出错:', error)
     }
-  }, [data])
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  }, [mounted, data, config, selectedNodeId])
 
   return (
     <div 
@@ -99,15 +139,26 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
         width: '100%', 
         height: '100%',
         background: '#fafafa',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#666',
-        fontSize: '14px'
+        position: 'relative'
       }}
     >
-      {!mounted && <div>正在加载图谱...</div>}
-      {mounted && data.nodes.length === 0 && <div>暂无数据</div>}
+      {/* 开发模式下显示调试信息 */}
+      {true && ( // 简化条件，避免类型错误
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          left: 10,
+          background: 'rgba(0, 0, 0, 0.7)',
+          color: 'white',
+          padding: '4px 8px',
+          borderRadius: 4,
+          fontSize: '12px',
+          zIndex: 1000,
+          pointerEvents: 'none'
+        }}>
+          节点: {data.nodes.length} | 边: {data.edges.length} | 选中: {selectedNodeId || '无'}
+        </div>
+      )}
     </div>
   )
 }
