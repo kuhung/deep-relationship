@@ -89,14 +89,12 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
           lineWidth: selectedNodeId === node.id ? 3 : 2,
           shadowColor: selectedNodeId === node.id ? '#1890ff' : 'transparent',
           shadowBlur: selectedNodeId === node.id ? 8 : 0,
-        },
-        // 处理标签
-        ...(config.showNodeLabel && {
-          labelText: node.label,
+          // 标签相关样式
+          labelText: config.showNodeLabel ? node.label : undefined,
           labelFontSize: 11,
           labelFill: '#333',
           labelPosition: 'bottom'
-        })
+        }
       })),
       edges: data.edges.map(edge => ({
         id: edge.id,
@@ -106,13 +104,12 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
         style: {
           stroke: edge.color || '#e2e2e2',
           lineWidth: 1.5,
-          opacity: 0.8
-        },
-        ...(config.showEdgeLabel && edge.label && {
-          labelText: edge.label,
+          opacity: 0.8,
+          // 标签相关样式
+          labelText: config.showEdgeLabel ? edge.label : undefined,
           labelFontSize: 9,
           labelFill: '#666'
-        })
+        }
       }))
     }
     
