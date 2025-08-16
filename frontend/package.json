@@ -1,0 +1,42 @@
+{
+  "name": "deep-relationship-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "凡人修仙传人物关系图谱可视化前端应用",
+  "author": "kuhung <hi@kuhung.me>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
+  },
+  "dependencies": {
+    "@antv/g6": "^5.0.49",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.0",
+    "antd": "^5.21.0",
+    "@ant-design/icons": "^5.4.0",
+    "axios": "^1.7.0",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@types/lodash-es": "^4.17.12",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

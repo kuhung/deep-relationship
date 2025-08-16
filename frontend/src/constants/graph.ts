@@ -1,0 +1,238 @@
+// 图布局类型
+export enum GraphLayoutType {
+  FORCE = 'force',
+  CIRCULAR = 'circular',
+  RADIAL = 'radial',
+  DAGRE = 'dagre',
+  GRID = 'grid',
+  CONCENTRIC = 'concentric'
+}
+
+// 图布局配置
+export const LAYOUT_CONFIGS = {
+  [GraphLayoutType.FORCE]: {
+    type: 'd3Force',
+    linkDistance: 100,
+    nodeStrength: -300,
+    edgeStrength: 0.2,
+    nodeSize: 30,
+    preventOverlap: true,
+    alpha: 0.8,
+    alphaDecay: 0.028,
+    velocityDecay: 0.1
+  },
+  [GraphLayoutType.CIRCULAR]: {
+    type: 'circular',
+    radius: 200,
+    startRadius: 100,
+    endRadius: 300,
+    clockwise: false,
+    divisions: 5,
+    ordering: null
+  },
+  [GraphLayoutType.RADIAL]: {
+    type: 'radial',
+    center: [0, 0],
+    linkDistance: 100,
+    maxIteration: 1000,
+    focusNode: null,
+    unitRadius: 80,
+    preventOverlap: true,
+    nodeSize: 30,
+    strictRadial: false
+  },
+  [GraphLayoutType.DAGRE]: {
+    type: 'dagre',
+    rankdir: 'TB',
+    align: null,
+    nodesep: 20,
+    ranksep: 50,
+    controlPoints: true
+  },
+  [GraphLayoutType.GRID]: {
+    type: 'grid',
+    begin: [0, 0],
+    preventOverlap: true,
+    nodeSize: 30,
+    condense: false,
+    rows: null,
+    cols: null,
+    sortBy: 'degree'
+  },
+  [GraphLayoutType.CONCENTRIC]: {
+    type: 'concentric',
+    center: [0, 0],
+    nodeSize: 30,
+    minNodeSpacing: 20,
+    preventOverlap: true,
+    sweep: null,
+    equidistant: false,
+    startAngle: Math.PI / 6,
+    clockwise: false,
+    maxLevelDiff: null,
+    sortBy: 'degree'
+  }
+}
+
+// 节点类型配置
+export const NODE_TYPE_CONFIGS = {
+  'person': {
+    color: '#5B8FF9',
+    size: 30,
+    label: '人物'
+  },
+  'organization': {
+    color: '#5AD8A6',
+    size: 35,
+    label: '组织/宗门'
+  },
+  'location': {
+    color: '#5D7092',
+    size: 25,
+    label: '地点'
+  },
+  'item': {
+    color: '#F6BD16',
+    size: 20,
+    label: '物品/法宝'
+  },
+  'skill': {
+    color: '#E86452',
+    size: 22,
+    label: '技能/功法'
+  },
+  'event': {
+    color: '#6DC8EC',
+    size: 18,
+    label: '事件'
+  }
+}
+
+// 边类型配置
+export const EDGE_TYPE_CONFIGS = {
+  'relationship': {
+    color: '#5B8FF9',
+    label: '人际关系'
+  },
+  'family': {
+    color: '#E86452',
+    label: '家族关系'
+  },
+  'friend': {
+    color: '#5AD8A6',
+    label: '朋友'
+  },
+  'enemy': {
+    color: '#FF6B6B',
+    label: '敌对'
+  },
+  'master_student': {
+    color: '#845EC2',
+    label: '师徒'
+  },
+  'belongs_to': {
+    color: '#F6BD16',
+    label: '归属'
+  },
+  'located_at': {
+    color: '#5D7092',
+    label: '位于'
+  },
+  'owns': {
+    color: '#FFC75F',
+    label: '拥有'
+  },
+  'learned': {
+    color: '#E86452',
+    label: '学习'
+  },
+  'participated': {
+    color: '#6DC8EC',
+    label: '参与'
+  }
+}
+
+// 默认节点样式
+export const DEFAULT_NODE_STYLE = {
+  size: 30,
+  labelCfg: {
+    position: 'bottom',
+    style: {
+      fontSize: 12,
+      fill: '#333',
+      fontWeight: 500,
+      background: {
+        fill: 'rgba(255, 255, 255, 0.8)',
+        padding: [2, 4, 2, 4],
+        radius: 4
+      }
+    }
+  },
+  style: {
+    fill: '#5B8FF9',
+    stroke: '#fff',
+    lineWidth: 2,
+    cursor: 'pointer'
+  },
+  stateStyles: {
+    hover: {
+      lineWidth: 3,
+      shadowColor: '#000',
+      shadowBlur: 10,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0
+    },
+    selected: {
+      lineWidth: 4,
+      stroke: '#1890ff',
+      shadowColor: '#1890ff',
+      shadowBlur: 15,
+      shadowOffsetX: 0,
+      shadowOffsetY: 0
+    }
+  }
+}
+
+// 默认边样式
+export const DEFAULT_EDGE_STYLE = {
+  style: {
+    stroke: '#e2e2e2',
+    lineWidth: 2,
+    cursor: 'pointer'
+  },
+  labelCfg: {
+    style: {
+      fontSize: 10,
+      fill: '#666',
+      background: {
+        fill: 'rgba(255, 255, 255, 0.9)',
+        padding: [2, 4, 2, 4],
+        radius: 2
+      }
+    }
+  },
+  stateStyles: {
+    hover: {
+      lineWidth: 3,
+      stroke: '#1890ff'
+    },
+    selected: {
+      lineWidth: 4,
+      stroke: '#1890ff'
+    }
+  }
+}
+
+// 图谱主题配置
+export const GRAPH_THEMES = {
+  default: {
+    background: '#fafafa',
+    nodeColors: ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452', '#6DC8EC'],
+    edgeColor: '#e2e2e2'
+  },
+  dark: {
+    background: '#1f1f1f',
+    nodeColors: ['#4A90E2', '#7ED321', '#9013FE', '#F5A623', '#D0021B', '#50E3C2'],
+    edgeColor: '#666'
+  }
+}

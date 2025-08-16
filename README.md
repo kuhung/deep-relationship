@@ -10,20 +10,18 @@
 
 - **知识抽取**: 使用 Python 和 `kg-gen` 库，借助 `gpt-4o` 等先进的大语言模型，从小说文本中自动化抽取人物、关系、事件等信息，构建知识图谱。
 - **数据持久化**: 采用业界主流的图数据库 **Neo4j** 来存储和管理图谱数据，以保证高效的关联查询和分析能力。
-- **可视化与应用**:
-  - **首选方案 (低代码)**: 采用 **AntV G6VP** 平台，通过其低代码能力快速搭建一个功能丰富的图分析应用，实现“拿来改动上线”的目标。
-  - **备选方案 (完全定制)**: 基于 **React** 和 **AntV Graphin** 库进行定制化前端开发，以获得最大的设计自由度。
+- **可视化与应用**: 基于 **React + TypeScript + AntV G6** 构建现代化的前端应用，提供丰富的图谱可视化和交互功能，支持多种布局算法、节点搜索、关系分析等特性。
 
 ## 项目路线图
 
 我们将项目分为四个主要阶段，逐步推进：
 
-| 阶段 | 核心任务 | 预期产出 |
-| :--- | :--- | :--- |
-| **第一阶段：<br>基础构建与数据准备** | 1. 初始化项目环境（Python, Docker, Node.js）。<br>2. 获取《凡人修仙传》小说文本。<br>3. 定义知识图谱的初始模式（Schema）。<br>4. 部署一个本地 Neo4j 数据库实例。 | - 标准化的项目结构。<br>- `fanren_kg.json` 样例数据。<br>- 可运行的 Neo4j 服务。 |
-| **第二阶段：<br>知识抽取与持久化** | 1. 编写并优化 LLM 抽取提示（Prompt）。<br>2. 使用 `kg-gen` 对全书进行分块抽取。<br>3. 清洗与聚合抽取结果。<br>4. 将结构化数据导入 Neo4j。 | - 完整的知识抽取与导入脚本。<br>- 一个包含数万节点和关系的图数据库。 |
-| **第三阶段：<br>可视化应用实现** | 1. **(低代码路径)**：部署 G6VP 并连接 Neo4j。<br>2. 在 G6VP 中配置画布、布局、样式和交互组件。<br>3. 导出 G6VP 应用为独立前端项目并部署。<br>4. **(定制化路径)**：搭建 React 前端项目，使用 Graphin 开发可视化界面。 | - 一个可在线访问和交互的人物关系图谱应用。 |
-| **第四阶段：<br>迭代与扩展** | 1. 扩展图谱模式，加入更多实体类型（如宗门、法宝）。<br>2. 引入时间或章节属性，展现人物关系的动态演变。<br>3. 优化查询性能和可视化效果。 | - 功能更丰富、数据更多维的应用 V2 版本。 |
+| 阶段                                           | 核心任务                                                                                                                                                                                                                                    | 预期产出                                                                                   |
+| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------- |
+| **第一阶段：`<br>`基础构建与数据准备** | 1. 初始化项目环境（Python, Docker, Node.js）。`<br>`2. 获取《凡人修仙传》小说文本。`<br>`3. 定义知识图谱的初始模式（Schema）。`<br>`4. 部署一个本地 Neo4j 数据库实例。                                                                | - 标准化的项目结构。`<br>`- `fanren_kg.json` 样例数据。`<br>`- 可运行的 Neo4j 服务。 |
+| **第二阶段：`<br>`知识抽取与持久化**   | 1. 编写并优化 LLM 抽取提示（Prompt）。`<br>`2. 使用 `kg-gen` 对全书进行分块抽取。`<br>`3. 清洗与聚合抽取结果。`<br>`4. 将结构化数据导入 Neo4j。                                                                                     | - 完整的知识抽取与导入脚本。`<br>`- 一个包含数万节点和关系的图数据库。                   |
+| **第三阶段：`<br>`可视化应用实现**     | 1.**(低代码路径)**：部署 G6VP 并连接 Neo4j。`<br>`2. 在 G6VP 中配置画布、布局、样式和交互组件。`<br>`3. 导出 G6VP 应用为独立前端项目并部署。`<br>`4. **(定制化路径)**：搭建 React 前端项目，使用 Graphin 开发可视化界面。 | - 一个可在线访问和交互的人物关系图谱应用。                                                 |
+| **第四阶段：`<br>`迭代与扩展**         | 1. 扩展图谱模式，加入更多实体类型（如宗门、法宝）。`<br>`2. 引入时间或章节属性，展现人物关系的动态演变。`<br>`3. 优化查询性能和可视化效果。                                                                                             | - 功能更丰富、数据更多维的应用 V2 版本。                                                   |
 
 ## 开发框架与技术栈
 
@@ -31,48 +29,72 @@
 
 ```
 .
-├── data/
-│   └── fanren_xiuxian_zhuan.txt  # 小说原始文本
-├── doc/
+├── data/                         # 数据目录
+│   ├── chapters_advanced/        # 按章节切分的PDF文件
+│   ├── 凡人修仙传.pdf            # 原始小说PDF
+│   └── 凡人修仙传.txt            # 原始小说文本
+├── doc/                          # 文档目录
 │   └── plan.md                   # 项目顶层规划文档
-├── scripts/
+├── scripts/                      # 脚本目录
 │   ├── extract_kg.py             # 知识抽取脚本
-│   └── import_to_neo4j.py        # 数据导入脚本
-├── app/
-│   └── (由 G6VP 导出或自定义的 React 应用)
-├── README.md
-└── requirements.txt              # Python 依赖
+│   ├── import_to_neo4j.py        # Neo4j数据导入脚本
+│   ├── split_pdf.sh              # PDF切分脚本
+│   ├── split_pdf_advanced.sh     # 高级PDF切分脚本
+│   └── split_pdf_by_chapter.sh   # 按章节切分PDF脚本
+├── frontend/                     # 前端应用目录
+│   ├── src/                      # 源代码
+│   │   ├── components/           # React组件
+│   │   ├── views/                # 页面视图
+│   │   ├── types/                # TypeScript类型定义
+│   │   ├── constants/            # 常量配置
+│   │   └── utils/                # 工具函数
+│   ├── package.json              # 前端依赖配置
+│   └── README.md                 # 前端项目说明
+├── README.md                     # 项目主说明
+└── requirements.txt              # Python依赖
 ```
 
 ### 环境搭建
 
-1.  **Python 环境**
+1. **Python 环境**
 
-    推荐使用 `virtualenv` 或 `conda` 创建独立的 Python 环境。
+   推荐使用 `virtualenv` 或 `conda` 创建独立的 Python 环境。
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Neo4j 数据库**
 
-2.  **Neo4j 数据库**
+   使用 Docker 可以最快地启动一个 Neo4j 服务。
 
-    使用 Docker 可以最快地启动一个 Neo4j 服务。
+   ```bash
+   docker run --name fanren-neo4j \
+       -p 7474:7474 -p 7687:7687 \
+       -d \
+       -e NEO4J_AUTH=neo4j/your_password \
+       neo4j:latest
+   ```
+   启动后，可以通过 `http://localhost:7474` 访问 Neo4j Browser。
+3. **前端环境**
 
-    ```bash
-    docker run --name fanren-neo4j \
-        -p 7474:7474 -p 7687:7687 \
-        -d \
-        -e NEO4J_AUTH=neo4j/your_password \
-        neo4j:latest
-    ```
-    启动后，可以通过 `http://localhost:7474` 访问 Neo4j Browser。
+   确保已安装 [Node.js](https://nodejs.org/) (>= 18.0.0) 和 npm (>= 9.0.0)。
 
-3.  **前端环境**
+   ```bash
+   # 进入前端目录并安装依赖
+   cd frontend
+   npm install
+   
+   # 启动开发服务器
+   npm run dev
+   
+   # 访问 http://localhost:3000 查看应用
+   ```
 
-    确保已安装 [Node.js](https://nodejs.org/) (LTS 版本)。如果采用定制化开发，可以使用 Vite 快速初始化 React 项目。
+   前端应用基于现代化技术栈：
+   - **React 18** + **TypeScript** - 类型安全的现代React开发
+   - **AntV G6 5.0.49** - 专业的图可视化引擎，支持最新特性
+   - **Ant Design 5** - 企业级UI组件库
+   - **Vite 6** - 极速的前端构建工具
+   - **ESLint** + **TypeScript ESLint** - 代码质量保证
 
-    ```bash
-    npm create vite@latest app -- --template react
-    cd app
-    npm install @antv/g6 @antv/graphin
-    ```
+   详细的前端项目说明请查看 [frontend/README.md](frontend/README.md)。

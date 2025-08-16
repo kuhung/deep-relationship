@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/components/graphcontainer.tsx","./src/components/graphsidebar.tsx","./src/components/graphtoolbar.tsx","./src/constants/graph.ts","./src/types/graph.ts","./src/utils/mockdata.ts","./src/views/graphview.tsx"],"version":"5.6.3"}
