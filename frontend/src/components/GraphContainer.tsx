@@ -64,9 +64,9 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       graphRef.current?.destroy()
       graphRef.current = null
     }
-  }, [data.nodes, onNodeSelect])
+  }, []) // 空依赖数组，只在组件挂载时执行一次
 
-  // 数据和配置更新
+  // 数据和配置更新 (移除selectedNodeId依赖，避免不必要的重新渲染)
   useEffect(() => {
     if (!mounted || !graphRef.current) return
 
@@ -85,15 +85,24 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
         style: {
           size: nodeSize,
           fill: node.color || '#5B8FF9',
-          stroke: selectedNodeId === node.id ? '#1890ff' : '#fff',
-          lineWidth: selectedNodeId === node.id ? 3 : 2,
-          shadowColor: selectedNodeId === node.id ? '#1890ff' : 'transparent',
-          shadowBlur: selectedNodeId === node.id ? 8 : 0,
+          stroke: '#fff',
+          lineWidth: 2,
           // 标签相关样式
           labelText: config.showNodeLabel ? node.label : undefined,
           labelFontSize: 11,
           labelFill: '#333',
           labelPosition: 'bottom'
+        },
+        // 使用G6的状态样式来处理选中效果
+        stateStyles: {
+          selected: {
+            stroke: '#1890ff',
+            lineWidth: 3,
+            shadowColor: '#1890ff',
+            shadowBlur: 8,
+            shadowOffsetX: 0,
+            shadowOffsetY: 0
+          }
         }
       })),
       edges: data.edges.map(edge => ({
@@ -126,7 +135,32 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       console.error('设置图谱数据时出错:', error)
     }
 
-  }, [mounted, data, config, selectedNodeId])
+  }, [mounted, data, config])
+
+  // 单独处理选中状态变化，使用G6的状态管理，避免重新渲染
+  useEffect(() => {
+    if (!mounted || !graphRef.current) return
+    
+    const g = graphRef.current
+    
+    // 清除所有节点的选中状态
+    data.nodes.forEach(node => {
+      try {
+        (g as any).setItemState(node.id, 'selected', false)
+      } catch (error) {
+        // 忽略节点不存在的错误
+      }
+    })
+    
+    // 设置当前选中节点的状态
+    if (selectedNodeId) {
+      try {
+        (g as any).setItemState(selectedNodeId, 'selected', true)
+      } catch (error) {
+        console.warn('设置节点选中状态失败:', error)
+      }
+    }
+  }, [selectedNodeId, mounted, data.nodes])
 
   return (
     <div 
@@ -143,7 +177,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       {true && ( // 简化条件，避免类型错误
         <div style={{
           position: 'absolute',
-          top: 10,
+          bottom: 10,
           left: 10,
           background: 'rgba(0, 0, 0, 0.7)',
           color: 'white',

@@ -4,7 +4,7 @@ import GraphContainer from '@/components/GraphContainer'
 import GraphToolbar from '@/components/GraphToolbar'
 import GraphSidebar from '@/components/GraphSidebar'
 import { GraphData, GraphConfig, NodeData } from '@/types/graph'
-import { generateDemoData } from '@/utils/mockData'
+import { generateDemoData } from '@/utils/Data'
 import { GraphLayoutType } from '@/constants/graph'
 
 const { Content } = Layout

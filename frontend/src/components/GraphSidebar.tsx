@@ -3,7 +3,7 @@ import { Card, Input, List, Tag, Typography, Space, Divider, Statistic, Row, Col
 import { SearchOutlined } from '@ant-design/icons'
 import { NodeData, GraphData, GraphStats } from '@/types/graph'
 import { NODE_TYPE_CONFIGS, EDGE_TYPE_CONFIGS } from '@/constants/graph'
-import { searchNodes } from '@/utils/mockData'
+import { searchNodes } from '@/utils/Data'
 
 const { Text } = Typography
 
