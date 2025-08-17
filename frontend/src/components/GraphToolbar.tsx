@@ -1,8 +1,8 @@
 import { Button, Select, Switch, Slider, Space, Tooltip } from 'antd'
 import { 
-  ReloadOutlined, 
-  DownloadOutlined,
-  FullscreenOutlined
+    // ReloadOutlined, 
+  CoffeeOutlined,
+  TeamOutlined
 } from '@ant-design/icons'
 import { GraphConfig } from '@/types/graph'
 import { GraphLayoutType } from '@/constants/graph'
@@ -12,33 +12,27 @@ interface GraphToolbarProps {
   onLayoutChange: (layout: GraphLayoutType) => void
   onConfigChange: (config: Partial<GraphConfig>) => void
   onDataRefresh: () => void
+  onShowSponsorModal: () => void
+  onShowJoinGroupModal: () => void
 }
 
 const GraphToolbar: React.FC<GraphToolbarProps> = ({
   config,
   onLayoutChange,
   onConfigChange,
-  onDataRefresh
+  // onDataRefresh,
+  onShowSponsorModal,
+  onShowJoinGroupModal
 }) => {
   const layoutOptions = [
     { label: '力导向布局', value: GraphLayoutType.FORCE },
-    { label: '环形布局', value: GraphLayoutType.CIRCULAR },
-    { label: '径向布局', value: GraphLayoutType.RADIAL },
-    { label: 'Dagre布局', value: GraphLayoutType.DAGRE },
+    // { label: '环形布局', value: GraphLayoutType.CIRCULAR }, 数据量大的时候出现卡顿
+    // { label: '径向布局', value: GraphLayoutType.RADIAL },
+    // { label: 'Dagre布局', value: GraphLayoutType.DAGRE }, 布局不好看
     { label: '网格布局', value: GraphLayoutType.GRID },
     { label: '同心圆布局', value: GraphLayoutType.CONCENTRIC }
   ]
 
-  const handleDownload = () => {
-    // 这里可以添加导出图片的功能
-    console.log('导出功能暂未实现')
-  }
-
-  const handleFullscreen = () => {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen()
-    }
-  }
 
   return (
     <div className="graph-toolbar">
@@ -72,10 +66,10 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
 
         {/* 标签显示控制 */}
         <div>
-          <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>标签显示</div>
+          <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>效果显示</div>
           <Space direction="vertical" size="small">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px' }}>节点标签</span>
+              <span style={{ fontSize: '11px', marginRight: '8px' }}>节点标签</span>
               <Switch
                 size="small"
                 checked={config.showNodeLabel}
@@ -83,43 +77,30 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
               />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px' }}>边标签</span>
+              <span style={{ fontSize: '11px', marginRight: '8px' }}>边标签</span>
               <Switch
                 size="small"
                 checked={config.showEdgeLabel}
                 onChange={(checked) => onConfigChange({ showEdgeLabel: checked })}
               />
             </div>
+            {/* 动画控制 */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '11px', marginRight: '8px' }}>开启动画</span>
+              <Switch
+                size="small"
+                checked={config.enableAnimation}
+                onChange={(checked) => onConfigChange({ enableAnimation: checked })}
+              />
+            </div>
           </Space>
-        </div>
-
-        {/* 动画控制 */}
-        <div>
-          <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>动画效果</div>
-          <Switch
-            size="small"
-            checked={config.enableAnimation}
-            onChange={(checked) => onConfigChange({ enableAnimation: checked })}
-          />
         </div>
 
         {/* 操作按钮 */}
         <div>
-          <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>操作</div>
+          <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>更多操作</div>
           <Space direction="vertical" size="small">
-            <Tooltip title="刷新数据">
-              <Button
-                type="text"
-                size="small"
-                icon={<ReloadOutlined />}
-                onClick={onDataRefresh}
-                style={{ width: '100%', justifyContent: 'flex-start' }}
-              >
-                刷新
-              </Button>
-            </Tooltip>
-            
-            <Tooltip title="导出图片">
+            {/* <Tooltip title="导出图片">
               <Button
                 type="text"
                 size="small"
@@ -141,7 +122,43 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
               >
                 全屏
               </Button>
+            </Tooltip> */}
+
+            <Tooltip title="打赏支持">
+              <Button
+                type="text"
+                size="small"
+                icon={<CoffeeOutlined />}
+                onClick={onShowSponsorModal}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                打赏
+              </Button>
             </Tooltip>
+
+            <Tooltip title="反馈交流">
+              <Button
+                type="text"
+                size="small"
+                icon={<TeamOutlined />}
+                onClick={onShowJoinGroupModal}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                加群
+              </Button>
+            </Tooltip>
+
+            {/* <Tooltip title="刷新数据">
+              <Button
+                type="text"
+                size="small"
+                icon={<ReloadOutlined />}
+                onClick={onDataRefresh}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                刷新
+              </Button>
+            </Tooltip> */}
           </Space>
         </div>
       </Space>

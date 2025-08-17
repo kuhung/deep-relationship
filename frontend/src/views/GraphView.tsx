@@ -3,6 +3,8 @@ import { Layout, Spin, App as AntdApp } from 'antd'
 import GraphContainer from '@/components/GraphContainer'
 import GraphToolbar from '@/components/GraphToolbar'
 import GraphSidebar from '@/components/GraphSidebar'
+import BrandLogo from '@/components/BrandLogo'
+import QRCodeModal from '@/components/QRCodeModal'
 import { GraphData, GraphConfig, NodeData } from '@/types/graph'
 import { generateDemoData } from '@/utils/Data'
 import { GraphLayoutType } from '@/constants/graph'
@@ -14,6 +16,11 @@ interface GraphViewState {
   loading: boolean
   selectedNode: NodeData | null
   config: GraphConfig
+}
+
+interface ModalState {
+  sponsor: boolean
+  joinGroup: boolean
 }
 
 const GraphView = () => {
@@ -32,6 +39,10 @@ const GraphView = () => {
     }
   })
   const [hiddenNodeTypes, setHiddenNodeTypes] = useState<string[]>([])
+  const [modalState, setModalState] = useState<ModalState>({
+    sponsor: false,
+    joinGroup: false
+  })
 
   // 初始化数据
   useEffect(() => {
@@ -83,6 +94,12 @@ const GraphView = () => {
     }))
   }
 
+  // 打开/关闭模态框
+  const handleShowSponsorModal = () => setModalState(prev => ({ ...prev, sponsor: true }))
+  const handleCloseSponsorModal = () => setModalState(prev => ({ ...prev, sponsor: false }))
+  const handleShowJoinGroupModal = () => setModalState(prev => ({ ...prev, joinGroup: true }))
+  const handleCloseJoinGroupModal = () => setModalState(prev => ({ ...prev, joinGroup: false }))
+
   // 处理数据刷新
   const handleDataRefresh = () => {
     setState(prev => ({
@@ -132,6 +149,8 @@ const GraphView = () => {
   return (
     <Layout style={{ height: '100vh' }}>
       <Content style={{ position: 'relative', overflow: 'hidden' }}>
+        {/* 品牌标识 */}
+        <BrandLogo />
         {/* 图谱容器 */}
         <GraphContainer
           data={filteredGraphData}
@@ -145,6 +164,8 @@ const GraphView = () => {
           onLayoutChange={handleLayoutChange}
           onConfigChange={handleConfigChange}
           onDataRefresh={handleDataRefresh}
+          onShowSponsorModal={handleShowSponsorModal}
+          onShowJoinGroupModal={handleShowJoinGroupModal}
         />
         
         {/* 侧边栏 */}
@@ -154,6 +175,20 @@ const GraphView = () => {
           data={state.data}
           onNodeSelect={handleNodeSelect}
           onNodeTypeSelect={handleNodeTypeSelect}
+        />
+        
+        {/* 二维码弹窗 */}
+        <QRCodeModal
+          title="打赏支持"
+          imageUrl="/sponsor-qr-code.png"
+          visible={modalState.sponsor}
+          onClose={handleCloseSponsorModal}
+        />
+        <QRCodeModal
+          title="加入社群"
+          imageUrl="/join-group-qr-code.png"
+          visible={modalState.joinGroup}
+          onClose={handleCloseJoinGroupModal}
         />
       </Content>
     </Layout>
