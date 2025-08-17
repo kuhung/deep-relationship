@@ -465,51 +465,132 @@ const EVENTS = [
 function generateEdges(): EdgeData[] {
   const edges: EdgeData[] = []
   
-  // 人物关系
+  // 人物关系 (r前缀)
+  // 师徒关系
   edges.push(
-    { id: 'e1', source: 'hanli', target: 'moxian', edgeType: 'master_student', label: '师徒关系' },
-    { id: 'e2', source: 'hanli', target: 'zhangtiege', edgeType: 'friend', label: '好友' },
-    { id: 'e3', source: 'hanli', target: 'liyuesha', edgeType: 'relationship', label: '道侣' },
-    { id: 'e4', source: 'hanli', target: 'nanlong', edgeType: 'relationship', label: '道侣' },
-    { id: 'e5', source: 'hanli', target: 'qilingzi', edgeType: 'friend', label: '师兄弟' },
-    { id: 'e6', source: 'hanli', target: 'wenqing', edgeType: 'friend', label: '朋友' }
+    { id: 'r1', source: 'hanli', target: 'modaifu', edgeType: 'master_student', label: '师父' },
+    { id: 'r2', source: 'hanli', target: 'lishizu', edgeType: 'master_student', label: '师祖' },
+    { id: 'r3', source: 'wufeng', target: 'hanli', edgeType: 'master_student', label: '师兄传授' },
   )
 
-  // 组织归属关系
+  // 同门关系
   edges.push(
-    { id: 'e7', source: 'hanli', target: 'qixuanmen', edgeType: 'belongs_to', label: '加入' },
-    { id: 'e8', source: 'hanli', target: 'huangfenggu', edgeType: 'belongs_to', label: '加入' },
-    { id: 'e9', source: 'liyuesha', target: 'bingfengzu', edgeType: 'belongs_to', label: '族人' },
-    { id: 'e10', source: 'qilingzi', target: 'qixuanmen', edgeType: 'belongs_to', label: '弟子' }
+    { id: 'r4', source: 'hanli', target: 'zhangtie', edgeType: 'fellow_disciple', label: '同门' },
+    { id: 'r5', source: 'hanli', target: 'lifeyu', edgeType: 'fellow_disciple', label: '同门' },
+    { id: 'r6', source: 'hanli', target: 'chenshimei', edgeType: 'fellow_disciple', label: '同门' },
+    { id: 'r7', source: 'hanli', target: 'lushixiong', edgeType: 'fellow_disciple', label: '同门' },
+    { id: 'r8', source: 'hanli', target: 'wufeng', edgeType: 'fellow_disciple', label: '同门' },
+    { id: 'r9', source: 'hanli', target: 'dudong', edgeType: 'fellow_disciple', label: '同门' }
   )
 
-  // 地点关系
+  // 家庭关系
   edges.push(
-    { id: 'e11', source: 'hanli', target: 'jingzhou', edgeType: 'located_at', label: '出生地' },
-    { id: 'e12', source: 'qixuanmen', target: 'tiannan', edgeType: 'located_at', label: '位于' },
-    { id: 'e13', source: 'huangfenggu', target: 'tiannan', edgeType: 'located_at', label: '位于' }
+    { id: 'r10', source: 'hanli', target: 'hanfu', edgeType: 'family', label: '父子' },
+    { id: 'r11', source: 'hanli', target: 'hanmu', edgeType: 'family', label: '母子' },
+    { id: 'r12', source: 'hanli', target: 'dage', edgeType: 'family', label: '兄弟' },
+    { id: 'r13', source: 'hanli', target: 'sanshu', edgeType: 'family', label: '叔侄' },
+    { id: 'r14', source: 'moyuzhu', target: 'mofengwu', edgeType: 'family', label: '姐妹' },
+    { id: 'r15', source: 'mofengwu', target: 'modaifu', edgeType: 'family', label: '父女' },
+    { id: 'r16', source: 'moyuzhu', target: 'modaifu', edgeType: 'family', label: '父女' }
   )
 
-  // 物品拥有关系
+  // 双修/道侣关系
   edges.push(
-    { id: 'e14', source: 'hanli', target: 'jingjingping', edgeType: 'owns', label: '拥有' },
-    { id: 'e15', source: 'hanli', target: 'zhujidan', edgeType: 'owns', label: '拥有' },
-    { id: 'e16', source: 'hanli', target: 'lvyedan', edgeType: 'owns', label: '拥有' }
+    { id: 'r17', source: 'hanli', target: 'nangongwan', edgeType: 'dao_companion', label: '双修道侣' },
+    { id: 'r18', source: 'liujing', target: 'xuehongshijie', edgeType: 'dao_companion', label: '双修道侣' }
   )
 
-  // 技能学习关系
+  // 敌对关系
   edges.push(
-    { id: 'e17', source: 'hanli', target: 'changchun', edgeType: 'learned', label: '修炼' },
-    { id: 'e18', source: 'hanli', target: 'dayan', edgeType: 'learned', label: '修炼' },
-    { id: 'e19', source: 'liyuesha', target: 'bingfeng', edgeType: 'learned', label: '修炼' }
+    { id: 'r19', source: 'hanli', target: 'modaifu', edgeType: 'enemy', label: '击杀' },
+    { id: 'r20', source: 'hanli', target: 'ouyangfeitian', edgeType: 'enemy', label: '击杀' },
+    { id: 'r21', source: 'hanli', target: 'jiyinzushi', edgeType: 'enemy', label: '击败冰封' },
+    { id: 'r22', source: 'hanli', target: 'xiaowangye', edgeType: 'enemy', label: '毒杀' },
+    { id: 'r23', source: 'hanli', target: 'lushixiong', edgeType: 'enemy', label: '激战击败' },
+    { id: 'r24', source: 'hanli', target: 'wentianren', edgeType: 'enemy', label: '激战' }
   )
 
-  // 事件参与关系
+  // 傀儡/分身关系
   edges.push(
-    { id: 'e20', source: 'hanli', target: 'ruqi', edgeType: 'participated', label: '参与' },
-    { id: 'e21', source: 'hanli', target: 'zhujiji', edgeType: 'participated', label: '参与' },
-    { id: 'e22', source: 'hanli', target: 'luanxing', edgeType: 'participated', label: '参与' },
-    { id: 'e23', source: 'hanli', target: 'jiedan', edgeType: 'participated', label: '参与' }
+    { id: 'r25', source: 'hanli', target: 'quhun', edgeType: 'puppet', label: '傀儡分身' },
+    { id: 'r26', source: 'hanli', target: 'yinyue', edgeType: 'puppet', label: '傀儡分身' },
+    { id: 'r27', source: 'hanli', target: 'dieryuanying', edgeType: 'puppet', label: '第二元婴' }
+  )
+
+  // 组织归属关系 (o前缀)
+  edges.push(
+    { id: 'o1', source: 'hanli', target: 'qixuanmen', edgeType: 'belongs_to', label: '弟子' },
+    { id: 'o2', source: 'hanli', target: 'huangfenggu', edgeType: 'belongs_to', label: '弟子' },
+    { id: 'o3', source: 'hanli', target: 'luoyunzong', edgeType: 'belongs_to', label: '长老' },
+    { id: 'o4', source: 'zhangtie', target: 'qixuanmen', edgeType: 'belongs_to', label: '弟子' },
+    { id: 'o5', source: 'lifeyu', target: 'qixuanmen', edgeType: 'belongs_to', label: '护法' },
+    { id: 'o6', source: 'modaifu', target: 'qixuanmen', edgeType: 'belongs_to', label: '长老' },
+    { id: 'o7', source: 'sanshu', target: 'qixuanmen', edgeType: 'belongs_to', label: '外门弟子' },
+    { id: 'o8', source: 'lishizu', target: 'huangfenggu', edgeType: 'belongs_to', label: '长老' },
+    { id: 'o9', source: 'ni_shang_xian_zi', target: 'yanyuezong', edgeType: 'belongs_to', label: '弟子' },
+    { id: 'o10', source: 'dongxuaner', target: 'hehuanzong', edgeType: 'belongs_to', label: '弃徒' }
+  )
+
+  // 地点关系 (l前缀)
+  // 位于关系
+  edges.push(
+    { id: 'l1', source: 'qixuanmen', target: 'caixiashan', edgeType: 'located_at', label: '宗门所在' },
+    { id: 'l2', source: 'caixiashan', target: 'jingzhou', edgeType: 'located_at', label: '位于' },
+    { id: 'l3', source: 'jingzhou', target: 'yueguo', edgeType: 'located_at', label: '位于' },
+    { id: 'l4', source: 'huangfenggu', target: 'yueguo', edgeType: 'located_at', label: '位于' },
+    { id: 'l5', source: 'jiayuancheng', target: 'lanzhou', edgeType: 'located_at', label: '位于' },
+    { id: 'l6', source: 'lanzhou', target: 'yueguo', edgeType: 'located_at', label: '位于' },
+    { id: 'l7', source: 'luoyunzong', target: 'tianquanfeng', edgeType: 'located_at', label: '位于' },
+    { id: 'l8', source: 'xinggong', target: 'luanxinghai', edgeType: 'located_at', label: '位于' },
+    { id: 'l9', source: 'tianxingcheng', target: 'luanxinghai', edgeType: 'located_at', label: '位于' }
+  )
+
+  // 出生/居住地关系
+  edges.push(
+    { id: 'l10', source: 'hanli', target: 'qingniuzhen', edgeType: 'birthplace', label: '出生地' },
+    { id: 'l11', source: 'hanli', target: 'shenshougu', edgeType: 'residence', label: '修炼地' },
+    { id: 'l12', source: 'hanli', target: 'tianquanfeng', edgeType: 'residence', label: '修炼地' },
+    { id: 'l13', source: 'modaifu', target: 'shenshougu', edgeType: 'residence', label: '居所' }
+  )
+
+  // 物品拥有关系 (i前缀)
+  edges.push(
+    { id: 'i1', source: 'hanli', target: 'jingjingping', edgeType: 'owns', label: '拥有' },
+    { id: 'i2', source: 'hanli', target: 'zhujidan', edgeType: 'owns', label: '拥有' },
+    { id: 'i3', source: 'hanli', target: 'qingzhufengyunjian', edgeType: 'owns', label: '炼制使用' },
+    { id: 'i4', source: 'hanli', target: 'xutianding', edgeType: 'owns', label: '获得' },
+    { id: 'i5', source: 'hanli', target: 'tianleizhu', edgeType: 'owns', label: '收集' },
+    { id: 'i6', source: 'hanli', target: 'gengjing', edgeType: 'owns', label: '寻找' },
+    { id: 'i7', source: 'hanli', target: 'danuoyiling', edgeType: 'owns', label: '拥有' },
+    { id: 'i8', source: 'lushixiong', target: 'qingjiaoqi', edgeType: 'owns', label: '使用' },
+    { id: 'i9', source: 'hanli', target: 'jingganghuan', edgeType: 'owns', label: '早期使用' },
+    { id: 'i10', source: 'manhuzi', target: 'huanglinjia', edgeType: 'owns', label: '穿戴' }
+  )
+
+  // 技能学习关系 (s前缀)
+  edges.push(
+    { id: 's1', source: 'hanli', target: 'changchun', edgeType: 'learned', label: '修炼' },
+    { id: 's2', source: 'hanli', target: 'dayanjue', edgeType: 'learned', label: '修炼' },
+    { id: 's3', source: 'hanli', target: 'xuanmuiyingdafa', edgeType: 'learned', label: '修炼' },
+    { id: 's4', source: 'hanli', target: 'dagengjianzhen', edgeType: 'learned', label: '掌握' },
+    { id: 's5', source: 'hanli', target: 'mingwangjue', edgeType: 'learned', label: '修炼' },
+    { id: 's6', source: 'hanli', target: 'pizhixianlei', edgeType: 'learned', label: '掌握' },
+    { id: 's7', source: 'zhangtie', target: 'xiangjiagong', edgeType: 'learned', label: '修炼' },
+    { id: 's8', source: 'hanli', target: 'yishu', edgeType: 'learned', label: '学习' },
+    { id: 's9', source: 'hanli', target: 'lianqishu', edgeType: 'learned', label: '掌握' },
+    { id: 's10', source: 'hanli', target: 'quchongshu', edgeType: 'learned', label: '参悟' }
+  )
+
+  // 事件参与关系 (e前缀)
+  edges.push(
+    { id: 'e1', source: 'hanli', target: 'ruqi', edgeType: 'participated', label: '参与' },
+    { id: 'e2', source: 'hanli', target: 'zhujichenggong', edgeType: 'participated', label: '突破' },
+    { id: 'e3', source: 'hanli', target: 'jiedanchenggong', edgeType: 'participated', label: '突破' },
+    { id: 'e4', source: 'hanli', target: 'luanxinghailixian', edgeType: 'participated', label: '历险' },
+    { id: 'e5', source: 'hanli', target: 'yuanyingchenggong', edgeType: 'participated', label: '突破' },
+    { id: 'e6', source: 'hanli', target: 'jihuafieshenglj', edgeType: 'participated', label: '筹备' },
+    { id: 'e7', source: 'zhangtie', target: 'ruqi', edgeType: 'participated', label: '参与' },
+    { id: 'e8', source: 'lifeyu', target: 'ruqi', edgeType: 'participated', label: '参与' }
   )
 
   return edges

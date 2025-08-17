@@ -124,18 +124,6 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
               </Button>
             </Tooltip> */}
 
-            <Tooltip title="打赏支持">
-              <Button
-                type="text"
-                size="small"
-                icon={<CoffeeOutlined />}
-                onClick={onShowSponsorModal}
-                style={{ width: '100%', justifyContent: 'flex-start' }}
-              >
-                打赏
-              </Button>
-            </Tooltip>
-
             <Tooltip title="反馈交流">
               <Button
                 type="text"
@@ -147,7 +135,17 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
                 加群
               </Button>
             </Tooltip>
-
+            <Tooltip title="打赏支持">
+              <Button
+                type="text"
+                size="small"
+                icon={<CoffeeOutlined />}
+                onClick={onShowSponsorModal}
+                style={{ width: '100%', justifyContent: 'flex-start' }}
+              >
+                打赏
+              </Button>
+            </Tooltip>
             {/* <Tooltip title="刷新数据">
               <Button
                 type="text"

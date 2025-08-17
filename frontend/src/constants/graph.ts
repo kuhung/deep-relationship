@@ -107,6 +107,18 @@ export const EDGE_TYPE_CONFIGS = {
     color: '#845EC2',
     label: '师徒'
   },
+  'fellow_disciple': {
+    color: '#9C88FF',
+    label: '同门'
+  },
+  'dao_companion': {
+    color: '#FF9999',
+    label: '道侣'
+  },
+  'puppet': {
+    color: '#666666',
+    label: '傀儡分身'
+  },
   'belongs_to': {
     color: '#F6BD16',
     label: '归属'
@@ -114,6 +126,14 @@ export const EDGE_TYPE_CONFIGS = {
   'located_at': {
     color: '#5D7092',
     label: '位于'
+  },
+  'birthplace': {
+    color: '#8B9DC3',
+    label: '出生地'
+  },
+  'residence': {
+    color: '#A2A2D0',
+    label: '居住地'
   },
   'owns': {
     color: '#FFC75F',
