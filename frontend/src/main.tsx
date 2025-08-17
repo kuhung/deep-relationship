@@ -5,6 +5,7 @@ import { ConfigProvider, App as AntdApp } from 'antd' // Import App as AntdApp
 import zhCN from 'antd/locale/zh_CN'
 import App from './App.tsx'
 import './index.css'
+import { Analytics } from '@vercel/analytics/react';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')!).render(
       <AntdApp> {/* Wrap with AntdApp */}
         <BrowserRouter>
           <App />
+          <Analytics />
         </BrowserRouter>
       </AntdApp>
     </ConfigProvider>
