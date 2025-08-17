@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Layout, Spin, App as AntdApp } from 'antd'
+import { Layout, Spin, App as AntdApp, FloatButton } from 'antd'
+import { SettingOutlined, ProfileOutlined } from '@ant-design/icons'
 import GraphContainer from '@/components/GraphContainer'
 import GraphToolbar from '@/components/GraphToolbar'
 import GraphSidebar from '@/components/GraphSidebar'
@@ -8,6 +9,7 @@ import QRCodeModal from '@/components/QRCodeModal'
 import { GraphData, GraphConfig, NodeData } from '@/types/graph'
 import { generateDemoData } from '@/utils/Data'
 import { GraphLayoutType } from '@/constants/graph'
+import useResponsive from '@/utils/useResponsive'
 
 const { Content } = Layout
 
@@ -25,6 +27,7 @@ interface ModalState {
 
 const GraphView = () => {
   const { message } = AntdApp.useApp() // Use App.useApp() to get message instance
+  const { isMobile } = useResponsive()
 
   const [state, setState] = useState<GraphViewState>({
     data: { nodes: [], edges: [] },
@@ -43,6 +46,9 @@ const GraphView = () => {
     sponsor: false,
     joinGroup: false
   })
+  const [toolbarVisible, setToolbarVisible] = useState(false)
+  const [sidebarVisible, setSidebarVisible] = useState(false)
+
 
   // 初始化数据
   useEffect(() => {
@@ -158,24 +164,62 @@ const GraphView = () => {
           onNodeSelect={handleNodeSelect}
         />
         
-        {/* 工具栏 */}
-        <GraphToolbar
-          config={state.config}
-          onLayoutChange={handleLayoutChange}
-          onConfigChange={handleConfigChange}
-          onDataRefresh={handleDataRefresh}
-          onShowSponsorModal={handleShowSponsorModal}
-          onShowJoinGroupModal={handleShowJoinGroupModal}
-        />
-        
-        {/* 侧边栏 */}
-        <GraphSidebar
-          selectedNode={state.selectedNode}
-          stats={stats}
-          data={state.data}
-          onNodeSelect={handleNodeSelect}
-          onNodeTypeSelect={handleNodeTypeSelect}
-        />
+        {isMobile ? (
+          <>
+            <FloatButton.Group trigger="click" icon={<SettingOutlined />}>
+              <FloatButton
+                icon={<ProfileOutlined />}
+                onClick={() => setSidebarVisible(true)}
+              />
+              <FloatButton
+                icon={<SettingOutlined />}
+                onClick={() => setToolbarVisible(true)}
+              />
+            </FloatButton.Group>
+
+            <GraphToolbar
+              config={state.config}
+              onLayoutChange={handleLayoutChange}
+              onConfigChange={handleConfigChange}
+              onDataRefresh={handleDataRefresh}
+              onShowSponsorModal={handleShowSponsorModal}
+              onShowJoinGroupModal={handleShowJoinGroupModal}
+              isMobile={isMobile}
+              open={toolbarVisible}
+              onClose={() => setToolbarVisible(false)}
+            />
+            
+            <GraphSidebar
+              selectedNode={state.selectedNode}
+              stats={stats}
+              data={state.data}
+              onNodeSelect={handleNodeSelect}
+              onNodeTypeSelect={handleNodeTypeSelect}
+              isMobile={isMobile}
+              open={sidebarVisible}
+              onClose={() => setSidebarVisible(false)}
+            />
+          </>
+        ) : (
+          <>
+            <GraphToolbar
+              config={state.config}
+              onLayoutChange={handleLayoutChange}
+              onConfigChange={handleConfigChange}
+              onDataRefresh={handleDataRefresh}
+              onShowSponsorModal={handleShowSponsorModal}
+              onShowJoinGroupModal={handleShowJoinGroupModal}
+            />
+            
+            <GraphSidebar
+              selectedNode={state.selectedNode}
+              stats={stats}
+              data={state.data}
+              onNodeSelect={handleNodeSelect}
+              onNodeTypeSelect={handleNodeTypeSelect}
+            />
+          </>
+        )}
         
         {/* 二维码弹窗 */}
         <QRCodeModal

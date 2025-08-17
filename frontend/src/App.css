@@ -37,3 +37,49 @@ code {
   font-size: 16px;
   color: #666;
 }
+
+.graph-toolbar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  width: 180px;
+}
+
+.graph-sidebar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 280px;
+  height: calc(100vh - 40px);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .graph-toolbar,
+  .graph-sidebar {
+    display: none; /* 在移动端由Drawer控制，因此隐藏默认样式 */
+  }
+
+  .brand-logo {
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+  }
+}
+
+.graph-toolbar-mobile {
+  padding: 0;
+}

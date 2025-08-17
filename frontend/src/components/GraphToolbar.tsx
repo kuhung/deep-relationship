@@ -1,4 +1,4 @@
-import { Button, Select, Switch, Slider, Space, Tooltip } from 'antd'
+import { Button, Select, Switch, Slider, Space, Tooltip, Drawer } from 'antd'
 import { 
     // ReloadOutlined, 
   CoffeeOutlined,
@@ -14,6 +14,9 @@ interface GraphToolbarProps {
   onDataRefresh: () => void
   onShowSponsorModal: () => void
   onShowJoinGroupModal: () => void
+  isMobile?: boolean
+  open?: boolean
+  onClose?: () => void
 }
 
 const GraphToolbar: React.FC<GraphToolbarProps> = ({
@@ -22,7 +25,10 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
   onConfigChange,
   // onDataRefresh,
   onShowSponsorModal,
-  onShowJoinGroupModal
+  onShowJoinGroupModal,
+  isMobile,
+  open,
+  onClose
 }) => {
   const layoutOptions = [
     { label: '力导向布局', value: GraphLayoutType.FORCE },
@@ -34,11 +40,10 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
   ]
 
 
-  return (
-    <div className="graph-toolbar">
-      <Space direction="vertical" size="middle">
-        {/* 布局选择 */}
-        <div>
+  const toolbarContent = (
+    <Space direction="vertical" size="middle">
+      {/* 布局选择 */}
+      <div>
           <div style={{ marginBottom: 8, fontSize: '12px', fontWeight: 500 }}>布局算法</div>
           <Select
             value={config.layout as GraphLayoutType}
@@ -159,7 +164,29 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
             </Tooltip> */}
           </Space>
         </div>
-      </Space>
+    </Space>
+  )
+
+  if (isMobile) {
+    return (
+      <Drawer
+        title="设置"
+        placement="right"
+        open={open}
+        onClose={onClose}
+        width={240}
+      >
+        <div className="graph-toolbar-mobile">
+          {toolbarContent}
+        </div>
+      </Drawer>
+    )
+  }
+
+
+  return (
+    <div className="graph-toolbar">
+      {toolbarContent}
     </div>
   )
 }
