@@ -123,6 +123,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
     }
     
     try {
+      g.clear(); // 在设置新数据前清空图谱
       // 使用any类型来绕过类型检查
       (g as any).setData(processedData);
       (g as any).setLayout(LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);

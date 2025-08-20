@@ -18,38 +18,43 @@ export const LAYOUT_CONFIGS = {
     nodeSpacing: 20,
     centrality: 'degree',
     animate: false, // 关闭布局动画
-    maxIteration: 200 // 限制最大迭代次数，防止过度计算
+    maxIteration: 160 // 限制最大迭代次数，防止过度计算
   },
   [GraphLayoutType.CIRCULAR]: {
     type: 'circular',
     radius: 200,
     startRadius: 100,
-    endRadius: 300
+    endRadius: 300,
+    animate: false // 增加animate属性
   },
   [GraphLayoutType.RADIAL]: {
     type: 'radial',
     linkDistance: 120,
     unitRadius: 80,
     preventOverlap: true,
-    nodeSize: 30
+    nodeSize: 30,
+    animate: false // 增加animate属性
   },
   [GraphLayoutType.DAGRE]: {
     type: 'dagre',
     rankdir: 'TB',
     nodesep: 20,
-    ranksep: 50
+    ranksep: 50,
+    animate: false // 增加animate属性
   },
   [GraphLayoutType.GRID]: {
     type: 'grid',
     preventOverlap: true,
     nodeSize: 30,
-    sortBy: 'degree'
+    sortBy: 'degree',
+    animate: false // 增加animate属性
   },
   [GraphLayoutType.CONCENTRIC]: {
     type: 'concentric',
     nodeSize: 30,
     minNodeSpacing: 20,
-    preventOverlap: true
+    preventOverlap: true,
+    animate: false // 增加animate属性
   }
 }
 
