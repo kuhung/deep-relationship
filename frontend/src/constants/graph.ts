@@ -12,11 +12,13 @@ export enum GraphLayoutType {
 export const LAYOUT_CONFIGS = {
   [GraphLayoutType.FORCE]: {
     type: 'force',
-    linkDistance: 120,
+    linkDistance: 90,
     preventOverlap: true,
     nodeSize: 30,
     nodeSpacing: 20,
-    centrality: 'degree'
+    centrality: 'degree',
+    animate: false, // 关闭布局动画
+    maxIteration: 200 // 限制最大迭代次数，防止过度计算
   },
   [GraphLayoutType.CIRCULAR]: {
     type: 'circular',

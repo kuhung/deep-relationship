@@ -90,14 +90,14 @@ const GraphToolbar: React.FC<GraphToolbarProps> = ({
               />
             </div>
             {/* 动画控制 */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '11px', marginRight: '8px' }}>开启动画</span>
               <Switch
                 size="small"
                 checked={config.enableAnimation}
                 onChange={(checked) => onConfigChange({ enableAnimation: checked })}
               />
-            </div>
+            </div> */}
           </Space>
         </div>
 
