@@ -18,6 +18,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
   const graphRef = useRef<Graph | null>(null)
   const [mounted, setMounted] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
+  const previousNodesRef = useRef<NodeData[] | undefined>(undefined)
 
   // 初始化图谱实例
   useEffect(() => {
@@ -123,7 +124,22 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
     }
     
     try {
-      g.clear(); // 在设置新数据前清空图谱
+      // 检查节点数据是否发生显著变化 (例如，节点数量或任何节点的ID发生变化)
+      const hasNodesChanged =
+        !previousNodesRef.current || // 第一次加载
+        previousNodesRef.current.length !== data.nodes.length ||
+        data.nodes.some(
+          (node, index) =>
+            !previousNodesRef.current || previousNodesRef.current[index]?.id !== node.id
+        );
+
+      if (hasNodesChanged) {
+        g.clear(); // 仅在节点数据显著变化时清空图谱
+      }
+      
+      // 更新前一个节点数据的引用
+      previousNodesRef.current = data.nodes;
+
       // 使用any类型来绕过类型检查
       (g as any).setData(processedData);
       (g as any).setLayout(LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);
