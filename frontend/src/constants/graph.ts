@@ -240,3 +240,6 @@ export const GRAPH_THEMES = {
     edgeColor: '#666'
   }
 }
+
+// 默认选中节点类型
+export const DEFAULT_SELECTED_NODE_TYPES = ['person', 'organization']

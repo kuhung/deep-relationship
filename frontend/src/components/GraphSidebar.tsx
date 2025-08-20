@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { NodeData, GraphData, GraphStats } from '@/types/graph'
-import { NODE_TYPE_CONFIGS, EDGE_TYPE_CONFIGS } from '@/constants/graph'
+import { NODE_TYPE_CONFIGS, EDGE_TYPE_CONFIGS, DEFAULT_SELECTED_NODE_TYPES } from '@/constants/graph'
 import { searchNodes } from '@/utils/Data'
 
 const { Text } = Typography
@@ -42,7 +42,7 @@ const GraphSidebar: React.FC<GraphSidebarProps> = ({
   onClose
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('')
-  const [selectedNodeTypes, setSelectedNodeTypes] = useState<string[]>([])
+  const [selectedNodeTypes, setSelectedNodeTypes] = useState<string[]>(DEFAULT_SELECTED_NODE_TYPES)
 
   // 搜索结果
   const searchResults = useMemo(() => {
@@ -226,8 +226,9 @@ const GraphSidebar: React.FC<GraphSidebarProps> = ({
                 <div
                   className="legend-color"
                   style={{
-                    backgroundColor: selectedNodeTypes.includes(type) ? '#D3D3D3' : color,
-                    border: selectedNodeTypes.includes(type) ? '2px solid #1890ff' : 'none'
+                    backgroundColor: selectedNodeTypes.includes(type) ? color : 'white',
+                    border: `2px solid ${color}`,
+                    opacity: selectedNodeTypes.includes(type) ? 1 : 0.5 // 增加透明度以示区分
                   }}
                 />
                 <Text style={{ flex: 1, fontSize: '12px' }}>{label}</Text>
@@ -413,8 +414,9 @@ const GraphSidebar: React.FC<GraphSidebarProps> = ({
                   <div
                     className="legend-color"
                     style={{
-                      backgroundColor: selectedNodeTypes.includes(type) ? '#D3D3D3' : color,
-                      border: selectedNodeTypes.includes(type) ? '2px solid #1890ff' : 'none'
+                      backgroundColor: selectedNodeTypes.includes(type) ? color : 'white',
+                      border: `2px solid ${color}`,
+                      opacity: selectedNodeTypes.includes(type) ? 1 : 0.5 // 增加透明度以示区分
                     }}
                   />
                   <Text style={{ flex: 1, fontSize: '12px' }}>{label}</Text>

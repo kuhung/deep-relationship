@@ -8,7 +8,7 @@ import BrandLogo from '@/components/BrandLogo'
 import QRCodeModal from '@/components/QRCodeModal'
 import { GraphData, GraphConfig, NodeData } from '@/types/graph'
 import { generateDemoData } from '@/utils/Data'
-import { GraphLayoutType } from '@/constants/graph'
+import { GraphLayoutType, NODE_TYPE_CONFIGS, DEFAULT_SELECTED_NODE_TYPES } from '@/constants/graph'
 import useResponsive from '@/utils/useResponsive'
 
 const { Content } = Layout
@@ -41,7 +41,9 @@ const GraphView = () => {
       enableAnimation: true,
     }
   })
-  const [hiddenNodeTypes, setHiddenNodeTypes] = useState<string[]>([])
+  const allNodeTypes = useMemo(() => Object.keys(NODE_TYPE_CONFIGS), [])
+  const initialHiddenNodeTypes = useMemo(() => allNodeTypes.filter(type => !DEFAULT_SELECTED_NODE_TYPES.includes(type)), [allNodeTypes])
+  const [hiddenNodeTypes, setHiddenNodeTypes] = useState<string[]>(initialHiddenNodeTypes)
   const [modalState, setModalState] = useState<ModalState>({
     sponsor: false,
     joinGroup: false
@@ -68,6 +70,11 @@ const GraphView = () => {
           loading: false
         }))
         
+        // 移除旧的初始化逻辑，因为 hiddenNodeTypes 已在 useState 中初始化
+        // const allNodeTypes = Object.keys(NODE_TYPE_CONFIGS)
+        // const initialHiddenNodeTypes = allNodeTypes.filter(type => !DEFAULT_SELECTED_NODE_TYPES.includes(type))
+        // setHiddenNodeTypes(initialHiddenNodeTypes)
+
         message.success('数据加载完成')
       } catch (error) {
         console.error('数据加载失败:', error)
@@ -117,8 +124,9 @@ const GraphView = () => {
   }
 
   // 处理节点类型选择
-  const handleNodeTypeSelect = (nodeTypes: string[]) => {
-    setHiddenNodeTypes(nodeTypes)
+  const handleNodeTypeSelect = (selectedNodeTypes: string[]) => {
+    const newHiddenNodeTypes = allNodeTypes.filter(type => !selectedNodeTypes.includes(type));
+    setHiddenNodeTypes(newHiddenNodeTypes)
   }
 
   // 根据隐藏节点类型过滤数据
