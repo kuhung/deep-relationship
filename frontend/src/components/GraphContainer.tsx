@@ -18,7 +18,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
   const graphRef = useRef<Graph | null>(null)
   const [mounted, setMounted] = useState(false)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
-  const previousNodesRef = useRef<NodeData[] | undefined>(undefined)
+  const [isLayoutAnimating, setIsLayoutAnimating] = useState(false) // 新增状态
 
   // 初始化图谱实例
   useEffect(() => {
@@ -47,6 +47,11 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       setSelectedNodeId(null)
       onNodeSelect(null)
     })
+    
+    // 监听布局动画开始和结束
+    graph.on('beforelayout', () => setIsLayoutAnimating(true))
+    graph.on('afterlayout', () => setIsLayoutAnimating(false))
+    graph.on('layoutstopped', () => setIsLayoutAnimating(false))
     
     graphRef.current = graph
     setMounted(true)
@@ -124,23 +129,13 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
     }
     
     try {
-      // 检查节点数据是否发生显著变化 (例如，节点数量或任何节点的ID发生变化)
-      const hasNodesChanged =
-        !previousNodesRef.current || // 第一次加载
-        previousNodesRef.current.length !== data.nodes.length ||
-        data.nodes.some(
-          (node, index) =>
-            !previousNodesRef.current || previousNodesRef.current[index]?.id !== node.id
-        );
-
-      if (hasNodesChanged) {
-        g.clear(); // 仅在节点数据显著变化时清空图谱
+      // 如果布局正在动画中，先停止布局
+      if (isLayoutAnimating) {
+        g.stopLayout()
+        setIsLayoutAnimating(false) // 立即更新状态，因为我们手动停止了
       }
       
-      // 更新前一个节点数据的引用
-      previousNodesRef.current = data.nodes;
-
-      // 使用any类型来绕过类型检查
+      // 使用 setData 方法更新图谱数据，G6 5.x 的推荐方式
       (g as any).setData(processedData);
       (g as any).setLayout(LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);
       g.render().then(() => {
@@ -152,7 +147,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       console.error('设置图谱数据时出错:', error)
     }
 
-  }, [mounted, data, config])
+  }, [mounted, data, config, isLayoutAnimating]) // 添加 isLayoutAnimating 依赖
 
   // 单独处理选中状态变化，使用G6的状态管理，避免重新渲染
   useEffect(() => {
@@ -204,7 +199,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
           zIndex: 1000,
           pointerEvents: 'none'
         }}>
-          节点: {data.nodes.length} | 边: {data.edges.length} | 选中: {selectedNodeId || '无'}
+          节点: {data.nodes.length} | 边: {data.edges.length} | 选中: {selectedNodeId || '无'} | 布局动画: {isLayoutAnimating ? '是' : '否'}
         </div>
       )}
     </div>
