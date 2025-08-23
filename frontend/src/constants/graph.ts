@@ -18,7 +18,12 @@ export const LAYOUT_CONFIGS = {
     nodeSpacing: 20,
     centrality: 'degree',
     animate: false, // 关闭布局动画
-    maxIteration: 200 // 限制最大迭代次数，防止过度计算
+    maxIteration: 200, // 限制最大迭代次数，防止过度计算
+    enableTick: false, // 禁用持续的 tick
+    onLayoutEnd: () => {
+      // 布局结束后的回调
+      console.log('Force layout completed')
+    }
   },
   [GraphLayoutType.CIRCULAR]: {
     type: 'circular',

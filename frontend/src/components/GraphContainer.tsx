@@ -215,7 +215,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       console.error('设置图谱数据时出错:', error)
     }
 
-  }, [mounted, data, config, isLayoutAnimating]) // 添加 isLayoutAnimating 依赖
+  }, [mounted, data, config]) // 添加 isLayoutAnimating 依赖
 
   // 单独处理选中状态变化，使用G6的状态管理，避免重新渲染
   useEffect(() => {
