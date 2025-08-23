@@ -20,6 +20,9 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [isLayoutAnimating, setIsLayoutAnimating] = useState(false) // 新增状态
 
+  const initialPinchDistance = useRef<number | null>(null)
+  const initialGraphZoom = useRef<number | null>(null)
+
   // 初始化图谱实例
   useEffect(() => {
     if (graphRef.current || !containerRef.current) return
@@ -65,8 +68,62 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
     }
     window.addEventListener('resize', handleResize)
 
+    // 处理移动端双指缩放
+    const container = containerRef.current
+
+    const getDistance = (touches: TouchList) => {
+      const [touch1, touch2] = Array.from(touches)
+      return Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      )
+    }
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length === 2) {
+        initialPinchDistance.current = getDistance(event.touches)
+        initialGraphZoom.current = graphRef.current?.getZoom() || 1
+      }
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length === 2 && initialPinchDistance.current !== null && initialGraphZoom.current !== null) {
+        event.preventDefault() // 阻止默认的浏览器缩放行为
+        const currentDistance = getDistance(event.touches)
+        const scale = currentDistance / initialPinchDistance.current
+        const newZoom = initialGraphZoom.current * scale
+        const g = graphRef.current
+        if (g) {
+          const viewportCenter = { x: (event.touches[0].clientX + event.touches[1].clientX) / 2, y: (event.touches[0].clientY + event.touches[1].clientY) / 2 } as any
+          const canvasCenter = g.getCanvasByViewport(viewportCenter) as any
+
+          const currentZoom = g.getZoom()
+
+          const newTranslationX = canvasCenter.x - (viewportCenter.x / currentZoom) * newZoom
+          const newTranslationY = canvasCenter.y - (viewportCenter.y / currentZoom) * newZoom
+
+          g.zoomTo(newZoom)
+          g.translateBy([newTranslationX, newTranslationY])
+        }
+      }
+    }
+
+    const handleTouchEnd = () => {
+      initialPinchDistance.current = null
+      initialGraphZoom.current = null
+    }
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: false })
+    container.addEventListener('touchmove', handleTouchMove, { passive: false })
+    container.addEventListener('touchend', handleTouchEnd)
+    container.addEventListener('touchcancel', handleTouchEnd)
+
     return () => {
       window.removeEventListener('resize', handleResize)
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchmove', handleTouchMove)
+      container.removeEventListener('touchend', handleTouchEnd)
+      container.removeEventListener('touchcancel', handleTouchEnd)
       graphRef.current?.destroy()
       graphRef.current = null
     }
