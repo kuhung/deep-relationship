@@ -13,12 +13,12 @@ export const LAYOUT_CONFIGS = {
   [GraphLayoutType.FORCE]: {
     type: 'force',
     linkDistance: 90,
-    preventOverlap: true,
+    preventOverlap: false,
     nodeSize: 30,
     nodeSpacing: 20,
     centrality: 'degree',
     animate: false, // 关闭布局动画
-    maxIteration: 160 // 限制最大迭代次数，防止过度计算
+    maxIteration: 200 // 限制最大迭代次数，防止过度计算
   },
   [GraphLayoutType.CIRCULAR]: {
     type: 'circular',

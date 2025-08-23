@@ -52,9 +52,18 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
     })
     
     // 监听布局动画开始和结束
-    graph.on('beforelayout', () => setIsLayoutAnimating(true))
-    graph.on('afterlayout', () => setIsLayoutAnimating(false))
-    graph.on('layoutstopped', () => setIsLayoutAnimating(false))
+    graph.on('beforelayout', () => {
+      console.log('Layout animation started.');
+      setIsLayoutAnimating(true);
+    })
+    graph.on('afterlayout', () => {
+      console.log('Layout animation ended.');
+      setIsLayoutAnimating(false);
+    })
+    graph.on('layoutstopped', () => {
+      console.log('Layout animation stopped.');
+      setIsLayoutAnimating(false);
+    })
     
     graphRef.current = graph
     setMounted(true)
@@ -194,7 +203,9 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
       
       // 使用 setData 方法更新图谱数据，G6 5.x 的推荐方式
       (g as any).setData(processedData);
+      console.log('Setting layout with config:', LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);
       (g as any).setLayout(LAYOUT_CONFIGS[config.layout as keyof typeof LAYOUT_CONFIGS]);
+      console.log('Layout set.');
       g.render().then(() => {
         g.fitView()
       }).catch(error => {
