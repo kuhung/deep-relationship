@@ -1,10 +1,10 @@
-# 项目部署指南
+# 部署指南
 
-## 🚀 快速启动
+## 快速启动
 
-### 前端应用启动
+### 前端应用
 
-使用项目提供的便捷启动脚本：
+使用便捷启动脚本：
 
 ```bash
 ./start-frontend.sh
@@ -18,131 +18,141 @@ npm install
 npm run dev
 ```
 
-应用将在 `http://localhost:3000` 启动。
+应用将在 `http://localhost:3000` 启动，包含《凡人修仙传》演示数据，无需配置后端即可运行。
 
-### 项目结构概览
+### 生产构建
+
+```bash
+cd frontend
+npm run build
+# 构建产物生成在 frontend/dist/
+```
+
+### Vercel 部署
+
+项目已适配 Vercel 部署，推送到 GitHub 后通过 Vercel 导入即可自动构建：
+
+1. 将项目推送到 GitHub
+2. 在 [Vercel](https://vercel.com) 中导入仓库
+3. 构建设置：
+   - Framework Preset: `Vite`
+   - Root Directory: `frontend`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+
+## 项目结构
 
 ```
 deep-relationship/
 ├── frontend/                    # 前端可视化应用
-│   ├── src/                    # 源代码
-│   │   ├── components/         # React组件
-│   │   │   ├── GraphContainer.tsx   # G6图谱容器
-│   │   │   ├── GraphToolbar.tsx     # 工具栏组件  
-│   │   │   └── GraphSidebar.tsx     # 侧边栏组件
-│   │   ├── views/              # 页面视图
-│   │   ├── types/              # TypeScript类型
-│   │   ├── constants/          # 配置常量
-│   │   └── utils/              # 工具函数
-│   ├── package.json            # 依赖配置
-│   └── README.md              # 详细文档
-├── data/                       # 小说数据文件
-├── scripts/                    # 数据处理脚本
-└── start-frontend.sh          # 快速启动脚本
+│   ├── src/
+│   │   ├── components/          # React 组件
+│   │   │   ├── GraphContainer.tsx   # G6 图谱容器
+│   │   │   ├── GraphToolbar.tsx     # 工具栏组件
+│   │   │   ├── GraphSidebar.tsx     # 侧边栏组件
+│   │   │   ├── BrandLogo.tsx        # 品牌 Logo 组件
+│   │   │   └── QRCodeModal.tsx      # 二维码弹窗
+│   │   ├── views/               # 页面视图
+│   │   ├── types/               # TypeScript 类型
+│   │   ├── constants/           # 配置常量
+│   │   └── utils/               # 工具函数与演示数据
+│   ├── package.json
+│   └── README.md
+├── data/                        # 小说数据文件
+├── scripts/                     # 知识抽取与数据处理脚本
+├── requirements.txt             # Python 依赖
+└── start-frontend.sh            # 快速启动脚本
 ```
 
-## 🎯 功能特性
+## 功能状态
 
-### ✅ 已实现功能
+### 已实现
 
-1. **现代化前端架构**
-   - React 18 + TypeScript
-   - Vite 6 构建工具
-   - Ant Design 5 UI组件库
-   - AntV G6 5.0.49 图可视化引擎
+- React 18 + TypeScript + Vite 6 前端架构
+- AntV G6 5.0.49 图谱可视化引擎
+- Ant Design 5 UI 组件库
+- 多种布局算法（力导向、环形、径向、Dagre、网格、同心圆）
+- 节点类型样式配置（人物、组织、地点、物品、技能、事件）
+- 节点点击、画布拖拽缩放、搜索、统计、图例
+- 基于《凡人修仙传》的演示数据
+- LLM 知识抽取脚本（`extract_kg.py`）
+- Neo4j 数据导入脚本（`import_to_neo4j.py`）
+- Vercel Analytics 集成
+- Google Analytics 集成
 
-2. **完整的项目结构**
-   - 模块化组件设计
-   - 类型安全的TypeScript开发
-   - 响应式UI设计
-   - 代码规范和linting配置
+### 待完善
 
-3. **图谱可视化基础框架**
-   - GraphContainer: G6图谱容器组件
-   - GraphToolbar: 图谱控制工具栏
-   - GraphSidebar: 信息展示侧边栏
-   - 支持多种布局算法配置
+- G6 5.0 高级渲染特性（节点边样式精细化）
+- 节点拖拽、关系高亮、图谱导出
+- 连接 Neo4j 后端 API（当前使用演示数据）
+- 数据增删改查界面
 
-4. **示例数据系统**
-   - 基于《凡人修仙传》的模拟数据
-   - 人物、组织、地点、物品等多种实体类型
-   - 丰富的关系类型定义
+## 技术栈
 
-5. **交互功能框架**
-   - 节点点击选择
-   - 画布拖拽和缩放
-   - 搜索功能
-   - 实时统计信息
+| 类别 | 技术 | 版本 |
+|------|------|------|
+| 前端框架 | React | 18.3.1 |
+| 类型系统 | TypeScript | 5.6.2 |
+| 构建工具 | Vite | 6.0.0 |
+| UI 组件库 | Ant Design | 5.21.0 |
+| 图可视化 | AntV G6 | 5.0.49 |
+| 路由 | React Router | 7.1.0 |
+| HTTP 客户端 | Axios | 1.7.0 |
+| 工具库 | Lodash-es | 4.17.21 |
+| 代码检查 | ESLint | 9.0.0 |
 
-### 🔧 待完善功能
+## Neo4j 数据库（可选）
 
-1. **G6图谱渲染**
-   - 当前使用简化版本的G6 API
-   - 需要根据G6 5.0最新文档完善图谱渲染
-   - 需要实现节点和边的正确显示
+使用 Docker 启动本地 Neo4j 实例：
 
-2. **高级交互功能**
-   - 节点拖拽
-   - 关系高亮
-   - 工具栏功能完整实现
-   - 导出功能
+```bash
+docker run --name fanren-neo4j \
+    -p 7474:7474 -p 7687:7687 \
+    -d \
+    -e NEO4J_AUTH=neo4j/your_password \
+    neo4j:latest
+```
 
-3. **数据集成**
-   - 连接后端API
-   - 实时数据加载
-   - 数据缓存和优化
+启动后访问 `http://localhost:7474` 打开 Neo4j Browser。
 
-## 🎨 技术栈详情
+执行知识抽取并导入数据：
 
-### 前端技术栈
+```bash
+# 设置环境变量
+export OPENAI_API_KEY=your_api_key
 
-- **框架**: React 18.3.1
-- **类型系统**: TypeScript 5.6.2  
-- **构建工具**: Vite 6.0.0
-- **UI组件库**: Ant Design 5.21.0
-- **图可视化**: AntV G6 5.0.49
-- **路由**: React Router 7.1.0
-- **HTTP客户端**: Axios 1.7.0
-- **工具库**: Lodash-es 4.17.21
+# 知识抽取（生成 fanren_kg.json）
+python scripts/extract_kg.py
 
-### 开发工具
+# 导入 Neo4j
+python scripts/import_to_neo4j.py
+```
 
-- **代码检查**: ESLint 9.0.0 + TypeScript ESLint
-- **样式方案**: CSS + Ant Design主题系统
-- **热重载**: Vite HMR
-- **代码分割**: Rollup manual chunks
+## 开发计划
 
-## 📋 开发计划
+### 近期
 
-### 近期任务
-- [ ] 完善G6图谱渲染功能
-- [ ] 实现完整的节点和边样式
-- [ ] 添加布局算法切换
-- [ ] 优化响应式设计
+- 完善 G6 图谱渲染功能
+- 实现节点和边的精细样式
+- 添加布局算法平滑切换动画
+- 优化移动端响应式体验
 
-### 中期目标
-- [ ] 集成Neo4j数据库
-- [ ] 实现数据的增删改查
-- [ ] 添加高级搜索功能
-- [ ] 性能优化和缓存策略
+### 中期
 
-### 长期规划
-- [ ] 多维数据分析
-- [ ] 时间轴功能
-- [ ] 协作功能
-- [ ] 移动端适配
+- 集成 Neo4j 后端 API
+- 实现图谱数据的动态加载
+- 高级搜索（属性过滤、关系类型筛选）
+- 性能优化与大规模数据渲染
 
-## 🤝 参与开发
+### 长期
 
-项目采用模块化设计，欢迎参与开发：
+- 时间轴功能（展示关系动态演变）
+- 多维数据分析与图谱统计
+- 协作编辑功能
+- 多语言支持
 
-1. **前端开发**: 完善图谱可视化和交互功能
-2. **后端集成**: 实现数据API和业务逻辑  
-3. **数据处理**: 优化知识抽取和数据清洗
-4. **UI/UX**: 改进界面设计和用户体验
+## 联系
 
-## 📞 联系方式
-
-**开发者**: kuhung  
-**邮箱**: hi@kuhung.me  
-**项目年份**: 2025年
+**开发者**：kuhung  
+**邮箱**：hi@kuhung.me  
+**项目年份**：2026

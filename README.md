@@ -1,100 +1,166 @@
-# 凡人修仙传人物关系知识图谱
+# 凡人修仙传人物关系图谱 | Deep Relationship Graph
 
-本项目旨在将百万字级小说《凡人修仙传》转化为一个可交互、可视化的知识图谱，探索大语言模型（LLM）在复杂叙事文本中的知识抽取能力，并构建一个现代化的图应用。
+> 基于大语言模型（LLM）与知识图谱技术，将百万字级小说《凡人修仙传》转化为可交互、可视化的人物关系图谱应用。
 
-该项目是 [从文本到繁星：面向复杂叙事的知识图谱技术、可视化与实施全景指南](doc/plan.md) 的具体实践。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![AntV G6](https://img.shields.io/badge/AntV_G6-5.0-orange.svg)](https://g6.antv.antgroup.com/)
 
-## 核心方案
+[在线演示](https://deep-relationship.vercel.app) | [技术方案文档](doc/plan.md) | [前端文档](frontend/README.md) | [部署指南](DEPLOYMENT.md)
 
-我们将遵循一个模块化的四阶段架构：**数据获取 -> 知识抽取 -> 数据持久化 -> 可视化实现**。
+---
 
-- **知识抽取**: 使用 Python 和 `kg-gen` 库，借助 `gpt-4o` 等先进的大语言模型，从小说文本中自动化抽取人物、关系、事件等信息，构建知识图谱。
-- **数据持久化**: 采用业界主流的图数据库 **Neo4j** 来存储和管理图谱数据，以保证高效的关联查询和分析能力。
-- **可视化与应用**: 基于 **React + TypeScript + AntV G6** 构建现代化的前端应用，提供丰富的图谱可视化和交互功能，支持多种布局算法、节点搜索、关系分析等特性。
+## 项目简介
 
-## 项目路线图
-
-我们将项目分为四个主要阶段，逐步推进：
-
-| 阶段                                           | 核心任务                                                                                                                                                                                                                                    | 预期产出                                                                                   |
-| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------- |
-| **第一阶段：`<br>`基础构建与数据准备** | 1. 初始化项目环境（Python, Docker, Node.js）。`<br>`2. 获取《凡人修仙传》小说文本。`<br>`3. 定义知识图谱的初始模式（Schema）。`<br>`4. 部署一个本地 Neo4j 数据库实例。                                                                | - 标准化的项目结构。`<br>`- `fanren_kg.json` 样例数据。`<br>`- 可运行的 Neo4j 服务。 |
-| **第二阶段：`<br>`知识抽取与持久化**   | 1. 编写并优化 LLM 抽取提示（Prompt）。`<br>`2. 使用 `kg-gen` 对全书进行分块抽取。`<br>`3. 清洗与聚合抽取结果。`<br>`4. 将结构化数据导入 Neo4j。                                                                                     | - 完整的知识抽取与导入脚本。`<br>`- 一个包含数万节点和关系的图数据库。                   |
-| **第三阶段：`<br>`可视化应用实现**     | 1.**(低代码路径)**：部署 G6VP 并连接 Neo4j。`<br>`2. 在 G6VP 中配置画布、布局、样式和交互组件。`<br>`3. 导出 G6VP 应用为独立前端项目并部署。`<br>`4. **(定制化路径)**：搭建 React 前端项目，使用 Graphin 开发可视化界面。 | - 一个可在线访问和交互的人物关系图谱应用。                                                 |
-| **第四阶段：`<br>`迭代与扩展**         | 1. 扩展图谱模式，加入更多实体类型（如宗门、法宝）。`<br>`2. 引入时间或章节属性，展现人物关系的动态演变。`<br>`3. 优化查询性能和可视化效果。                                                                                             | - 功能更丰富、数据更多维的应用 V2 版本。                                                   |
-
-## 开发框架与技术栈
-
-### 目录结构
+本项目探索如何将复杂叙事文本（小说）转化为结构化知识图谱，并以交互式可视化方式呈现。核心流程：
 
 ```
-.
+小说文本 → LLM 知识抽取 → 图数据库存储 → 前端可视化
+```
+
+技术上选用 `kg-gen` + GPT-4o 进行实体与关系抽取，Neo4j 作为图数据库，React + AntV G6 构建前端。
+
+该项目同时是 [从文本到繁星：面向复杂叙事的知识图谱技术、可视化与实施全景指南](doc/plan.md) 的工程实践。
+
+## 核心特性
+
+- **LLM 知识抽取**：基于 `kg-gen` 库与 GPT-4o，自动化从文本中识别人物、组织、地点、法宝、技能、事件等实体及其关系
+- **多种布局算法**：力导向、环形、径向、Dagre、网格、同心圆，一键切换
+- **丰富的节点类型**：人物、组织、地点、物品、技能、事件 6 类节点，差异化样式展示
+- **交互功能**：节点点击、拖拽平移、滚轮缩放、关系高亮、双击复位
+- **智能搜索**：按名称或描述模糊搜索节点，快速定位目标
+- **响应式设计**：兼容桌面端和移动端，自适应不同屏幕尺寸
+- **图谱统计**：实时展示节点数、关系数等基础统计信息
+
+## 技术栈
+
+| 层级 | 技术 | 说明 |
+|------|------|------|
+| 前端框架 | React 18 + TypeScript | 类型安全的现代 React 开发 |
+| 图可视化 | AntV G6 5.0.49 | 专业图可视化引擎，支持多种布局 |
+| UI 组件库 | Ant Design 5 | 企业级 UI 设计语言 |
+| 构建工具 | Vite 6 | 极速前端构建，支持 HMR |
+| 知识抽取 | kg-gen + GPT-4o | LLM 驱动的自动化知识抽取 |
+| 图数据库 | Neo4j | 高性能图数据存储与查询 |
+| 部署 | Vercel | Edge 部署，全球加速 |
+
+## 快速开始
+
+### 前端可视化（最简启动）
+
+```bash
+# 克隆项目
+git clone https://github.com/kuhung/deep-relationship.git
+cd deep-relationship
+
+# 启动前端（含演示数据）
+./start-frontend.sh
+
+# 或手动启动
+cd frontend
+npm install
+npm run dev
+# 访问 http://localhost:3000
+```
+
+### 知识抽取（需要 OpenAI API Key）
+
+```bash
+# 安装 Python 依赖（推荐使用 uv）
+pip install -r requirements.txt
+
+# 设置环境变量
+export OPENAI_API_KEY=your_api_key
+
+# 执行知识抽取（生成 fanren_kg.json）
+python scripts/extract_kg.py
+```
+
+### Neo4j 数据库（可选，用于完整功能）
+
+```bash
+# 使用 Docker 启动 Neo4j
+docker run --name fanren-neo4j \
+    -p 7474:7474 -p 7687:7687 \
+    -d \
+    -e NEO4J_AUTH=neo4j/your_password \
+    neo4j:latest
+
+# 导入知识图谱数据
+python scripts/import_to_neo4j.py
+```
+
+## 项目结构
+
+```
+deep-relationship/
 ├── data/                         # 数据目录
-│   ├── chapters_advanced/        # 按章节切分的PDF文件
-│   ├── 凡人修仙传.pdf            # 原始小说PDF
+│   ├── chapters_advanced/        # 按章节切分的 PDF 文件
+│   ├── 凡人修仙传.pdf            # 原始小说 PDF
 │   └── 凡人修仙传.txt            # 原始小说文本
 ├── doc/                          # 文档目录
-│   └── plan.md                   # 项目顶层规划文档
-├── scripts/                      # 脚本目录
-│   ├── extract_kg.py             # 知识抽取脚本
-│   ├── import_to_neo4j.py        # Neo4j数据导入脚本
-│   ├── split_pdf.sh              # PDF切分脚本
-│   ├── split_pdf_advanced.sh     # 高级PDF切分脚本
-│   └── split_pdf_by_chapter.sh   # 按章节切分PDF脚本
-├── frontend/                     # 前端应用目录
-│   ├── src/                      # 源代码
-│   │   ├── components/           # React组件
+│   └── plan.md                   # 技术方案全景指南（31KB）
+├── scripts/                      # 数据处理脚本
+│   ├── extract_kg.py             # LLM 知识抽取脚本
+│   ├── import_to_neo4j.py        # Neo4j 数据导入脚本
+│   ├── split_pdf.sh              # PDF 切分脚本
+│   ├── split_pdf_advanced.sh     # 高级 PDF 切分脚本
+│   └── split_pdf_by_chapter.sh   # 按章节切分 PDF 脚本
+├── frontend/                     # 前端应用
+│   ├── src/
+│   │   ├── components/           # React 组件（GraphContainer、GraphToolbar、GraphSidebar）
 │   │   ├── views/                # 页面视图
-│   │   ├── types/                # TypeScript类型定义
-│   │   ├── constants/            # 常量配置
-│   │   └── utils/                # 工具函数
-│   ├── package.json              # 前端依赖配置
-│   └── README.md                 # 前端项目说明
-├── README.md                     # 项目主说明
-└── requirements.txt              # Python依赖
+│   │   ├── types/                # TypeScript 类型定义
+│   │   ├── constants/            # 布局、节点、边常量配置
+│   │   └── utils/                # 工具函数与演示数据
+│   ├── package.json
+│   └── README.md                 # 前端详细文档
+├── requirements.txt              # Python 依赖
+├── start-frontend.sh             # 前端快速启动脚本
+├── DEPLOYMENT.md                 # 部署指南
+└── README.md
 ```
 
-### 环境搭建
+## 路线图
 
-1. **Python 环境**
+| 阶段 | 核心任务 | 状态 |
+|------|----------|------|
+| 第一阶段：基础构建 | 项目环境初始化、Schema 定义、Neo4j 部署 | 完成 |
+| 第二阶段：知识抽取 | LLM 分块抽取、数据清洗、Neo4j 导入 | 完成 |
+| 第三阶段：可视化 | React 前端、G6 渲染、交互功能 | 进行中 |
+| 第四阶段：迭代扩展 | 动态关系演变、性能优化、高级分析 | 规划中 |
 
-   推荐使用 `virtualenv` 或 `conda` 创建独立的 Python 环境。
+## 贡献指南
 
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. **Neo4j 数据库**
+欢迎通过以下方式参与项目：
 
-   使用 Docker 可以最快地启动一个 Neo4j 服务。
+1. Fork 此仓库
+2. 创建特性分支：`git checkout -b feature/your-feature`
+3. 提交变更（遵循 Conventional Commits）：`git commit -m 'feat: add your feature'`
+4. 推送到分支：`git push origin feature/your-feature`
+5. 提交 Pull Request
 
-   ```bash
-   docker run --name fanren-neo4j \
-       -p 7474:7474 -p 7687:7687 \
-       -d \
-       -e NEO4J_AUTH=neo4j/your_password \
-       neo4j:latest
-   ```
-   启动后，可以通过 `http://localhost:7474` 访问 Neo4j Browser。
-3. **前端环境**
+**优先贡献方向：**
+- 前端：完善 G6 5.0 图谱渲染，实现节点拖拽、关系高亮、导出功能
+- 数据：改进知识抽取 Prompt，提升实体识别准确率
+- 后端：实现 Neo4j 数据 API，支持动态数据加载
+- UI/UX：优化界面设计与移动端体验
 
-   确保已安装 [Node.js](https://nodejs.org/) (>= 18.0.0) 和 npm (>= 9.0.0)。
+## 相关资源
 
-   ```bash
-   # 进入前端目录并安装依赖
-   cd frontend
-   npm install
-   
-   # 启动开发服务器
-   npm run dev
-   
-   # 访问 http://localhost:3000 查看应用
-   ```
+- [AntV G6 文档](https://g6.antv.antgroup.com/) - 图可视化引擎
+- [kg-gen](https://github.com/dylansolms/kg-gen) - 知识图谱生成库
+- [Neo4j 文档](https://neo4j.com/docs/) - 图数据库
+- [技术方案文档](doc/plan.md) - 本项目完整技术方案（含可视化方案对比、LLM 抽取策略、RAG 集成等）
 
-   前端应用基于现代化技术栈：
-   - **React 18** + **TypeScript** - 类型安全的现代React开发
-   - **AntV G6 5.0.49** - 专业的图可视化引擎，支持最新特性
-   - **Ant Design 5** - 企业级UI组件库
-   - **Vite 6** - 极速的前端构建工具
-   - **ESLint** + **TypeScript ESLint** - 代码质量保证
+## 许可证
 
-   详细的前端项目说明请查看 [frontend/README.md](frontend/README.md)。
+本项目采用 [MIT 许可证](LICENSE)。
+
+## 联系
+
+**作者**：kuhung  
+**邮箱**：hi@kuhung.me
+
+如有问题或建议，欢迎通过 [Issues](https://github.com/kuhung/deep-relationship/issues) 反馈。
