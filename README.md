@@ -7,7 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
 [![AntV G6](https://img.shields.io/badge/AntV_G6-5.0-orange.svg)](https://g6.antv.antgroup.com/)
 
-[在线演示](https://deep-relationship.vercel.app) | [技术方案文档](doc/plan.md) | [前端文档](frontend/README.md) | [部署指南](DEPLOYMENT.md)
+[在线演示](https://fanren.kuhung.me) | [技术方案文档](doc/plan.md) | [前端文档](frontend/README.md) | [部署指南](DEPLOYMENT.md)
 
 ---
 
